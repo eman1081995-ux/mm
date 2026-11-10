@@ -1,0 +1,1102 @@
+<title>يوم مختلف</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+/* تصميم «يوم مختلف»: مدينة بألوان الأحمر والأصفر، وتوهّج الخلفية يتبع ساعات اليوم. التقرير نهاري.
+   الألوان ثابتة عمدًا (مظهر واحد)، مع تحديد الخلفية والنصوص صراحةً. */
+:root {
+  --red: #DA291C; --red-deep: #8E1B12; --night: #230C0A; --night-2: #3A1311;
+  --yellow: #FFC72C; --yellow-deep: #E0A100; --yellow-soft: #FFE59A;
+  --ink: #2A130F; --ink-soft: #5E3F38; --paper: #FFFFFF; --sand: #FFF1CC; --line: #F0D9A6;
+  --font-display: 'Cairo', 'Tajawal', system-ui, sans-serif;
+  --font-body: 'Tajawal', 'Cairo', system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { direction: rtl; height: 100%; }
+body {
+  margin: 0; min-height: 100%; direction: rtl;
+  background: var(--night); color: #fff; font-family: var(--font-body); font-size: 17px; line-height: 1.7;
+  padding-block: 0 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+body.day { background: var(--sand); color: var(--ink); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+body.day::before { background: var(--yellow); }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; line-height: 1.25; text-wrap: balance; }
+button { font-family: inherit; }
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: linear-gradient(180deg, var(--night-2) 0%, var(--night) 100%); }
+.sky .glow { position: absolute; left: -25%; right: -25%; top: -30%; height: 70%; border-radius: 50%; background: var(--glow, #FFC72C); filter: blur(70px); opacity: .42; transition: background 1.2s ease; }
+body.day .sky { background: linear-gradient(180deg, var(--yellow) 0%, var(--yellow-soft) 22%, var(--sand) 55%); }
+.sky .star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--yellow-soft); opacity: 0; transition: opacity 1s; animation: tw 4s ease-in-out infinite; }
+body.late .sky .star { opacity: .7; }
+.sky .city { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 22vh; min-height: 110px; opacity: .85; }
+body.day .sky .glow, body.day .sky .star, body.day .sky .city { display: none; }
+@keyframes tw { 50% { opacity: .15; transform: scale(.7); } }
+
+.app { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+.screen { display: flex; flex-direction: column; gap: 16px; padding-block: 16px 24px; animation: rise .45s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ---------- الأزرار ---------- */
+.btn { appearance: none; border: 0; cursor: pointer; min-height: 52px; padding: 12px 22px; border-radius: 14px; font-size: 18px; font-weight: 800; font-family: var(--font-display);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .12s, box-shadow .12s; text-align: center; }
+.btn.primary { background: var(--yellow); color: var(--ink); box-shadow: 0 5px 0 var(--yellow-deep); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--yellow-deep); }
+.btn.red { background: var(--red); color: #fff; box-shadow: 0 5px 0 var(--red-deep); }
+.btn.red:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--red-deep); }
+.btn.ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.45); }
+body.day .btn.ghost { color: var(--ink); border-color: var(--ink); }
+.btn.big { min-height: 60px; font-size: 21px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > * { flex: 1 1 160px; }
+
+/* ---------- شاشة البداية ---------- */
+.hero { text-align: center; align-items: center; padding-top: 28px; }
+.orb { width: 84px; height: 84px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 10px rgba(255,199,44,.2), 0 0 60px rgba(255,199,44,.6); animation: pulse 3s infinite; }
+.kicker { font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; color: var(--yellow); font-size: 15px; }
+.hero .en { font-family: var(--font-display); font-weight: 700; letter-spacing: .18em; color: var(--yellow); margin-top: -10px; direction: ltr; }
+.hero h1 { font-size: clamp(44px, 14vw, 68px); font-weight: 900; color: #fff; text-shadow: 0 4px 0 var(--red); }
+.lead { font-size: 19px; color: #FFE9B8; max-width: 34ch; margin: 0; }
+.cast { display: flex; justify-content: center; gap: 4px; margin: 6px 0 2px; }
+.cast .av { width: 22vw; max-width: 104px; }
+.clock { font-family: var(--font-display); font-weight: 900; font-size: 30px; color: var(--yellow); background: rgba(0,0,0,.28); border: 2px solid rgba(255,199,44,.5); border-radius: 14px; padding: 2px 16px; direction: ltr; }
+.hint { font-size: 14px; color: #E6C79A; margin: 0; }
+
+/* ---------- الشخصيات ---------- */
+.av { display: block; width: 120px; height: auto; animation: bob 3.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.av:nth-child(2) { animation-delay: -.8s; } .av:nth-child(3) { animation-delay: -1.6s; } .av:nth-child(4) { animation-delay: -2.4s; }
+@keyframes bob { 50% { transform: translateY(-5px) rotate(-1deg); } }
+
+/* ---------- شريط التقدم ---------- */
+.hud { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; margin-inline: -16px; padding: 10px 16px 12px; background: linear-gradient(180deg, var(--night) 70%, rgba(35,12,10,0)); }
+.trail { display: flex; align-items: center; gap: 0; }
+.trail .stop { flex: 0 0 auto; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,199,44,.55); background: transparent; position: relative; z-index: 1; }
+.trail .stop.done { background: var(--yellow); border-color: var(--yellow); }
+.trail .stop.now { background: var(--red); border-color: var(--yellow); box-shadow: 0 0 0 5px rgba(255,199,44,.25); animation: pulse 1.8s infinite; }
+.trail .seg { flex: 1 1 0; height: 0; border-top: 3px dotted rgba(255,199,44,.35); }
+.trail .seg.done { border-top: 3px solid var(--yellow); }
+@keyframes pulse { 50% { box-shadow: 0 0 0 9px rgba(255,199,44,.06); } }
+.hud .cap { display: flex; justify-content: space-between; margin-top: 7px; font-size: 14px; color: #E6C79A; font-weight: 500; }
+.hud .cap b { color: var(--yellow); font-family: var(--font-display); }
+
+/* ---------- المشهد ---------- */
+.scene { position: relative; height: 176px; border-radius: 20px; overflow: hidden; box-shadow: 0 6px 0 rgba(0,0,0,.3); background: #E8D9C3; }
+.scene .bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene .av { position: absolute; right: 18px; bottom: -6px; width: 118px; animation: none; filter: drop-shadow(0 4px 4px rgba(0,0,0,.25)); }
+.scene .tchip { position: absolute; top: 10px; left: 10px; background: rgba(35,12,10,.82); color: var(--yellow); font-family: var(--font-display); font-weight: 800; font-size: 14px; padding: 2px 12px; border-radius: 999px; direction: ltr; }
+.who { position: absolute; left: 10px; bottom: 10px; display: flex; flex-direction: column; background: rgba(255,255,255,.92); color: var(--ink); border-radius: 12px; padding: 4px 12px; max-width: 52%; }
+.who b { font-family: var(--font-display); font-size: 17px; color: var(--red); line-height: 1.3; }
+.who span { font-size: 13px; color: var(--ink-soft); line-height: 1.3; }
+.ctx { display: flex; flex-direction: column; gap: 4px; border-inline-start: 4px solid var(--yellow); background: rgba(255,199,44,.12); border-radius: 12px; padding: 8px 12px; font-size: 15px; color: #FFF1CC; }
+.ctx b { font-family: var(--font-display); color: var(--yellow); font-size: 13.5px; }
+.chat { display: flex; flex-direction: column; gap: 10px; }
+.msg { display: flex; gap: 10px; align-items: flex-end; opacity: 0; animation: rise .45s ease forwards; }
+.msg .face { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--yellow); background: #FFE59A; }
+.msg .mb { background: #fff; color: var(--ink); border-radius: 16px 16px 16px 4px; padding: 8px 14px; display: flex; flex-direction: column; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+.msg .mb b { font-family: var(--font-display); font-size: 13.5px; color: var(--red); line-height: 1.4; }
+.msg .mb span { font-size: 16.5px; line-height: 1.55; }
+.notif { display: flex; gap: 12px; align-items: center; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 16px; padding: 10px 14px; backdrop-filter: blur(6px); }
+.notif i { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; background: var(--red); position: relative; }
+.notif i::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--yellow); }
+.notif div { display: flex; flex-direction: column; min-width: 0; }
+.notif b { font-family: var(--font-display); font-size: 14px; color: var(--yellow); direction: ltr; text-align: right; }
+.notif span { font-size: 15.5px; color: #FFF1CC; }
+.bubble { background: var(--paper); color: var(--ink); border-radius: 18px; padding: 16px 18px; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,.25); }
+.bubble h2 { font-size: 22px; color: var(--red); margin-bottom: 6px; }
+.bubble p { margin: 0; font-size: 17.5px; }
+.tag { display: inline-block; align-self: flex-start; background: rgba(255,199,44,.16); color: var(--yellow); border: 1px solid rgba(255,199,44,.5); border-radius: 999px; padding: 2px 12px; font-size: 14px; font-weight: 700; }
+.opts { display: flex; flex-direction: column; gap: 12px; }
+.opt { appearance: none; width: 100%; cursor: pointer; text-align: right; display: flex; gap: 12px; align-items: flex-start; border: 0; border-radius: 16px;
+  background: #FFF8E6; color: var(--ink); padding: 15px 16px; font-size: 17.5px; line-height: 1.6; font-weight: 500; box-shadow: 0 5px 0 var(--yellow-deep); transition: transform .12s, box-shadow .12s, background .15s; }
+.opt:hover { background: #FFFFFF; }
+.opt:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--yellow-deep); }
+.opt .mark { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--red); margin-top: 2px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 900; font-size: 15px; color: #fff; }
+.opt.sel { background: var(--red); color: #fff; box-shadow: 0 5px 0 var(--red-deep); }
+.opt.sel .mark { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+
+/* ---------- النتيجة الفورية ---------- */
+.card { background: var(--paper); color: var(--ink); border-radius: 18px; padding: 16px 18px; box-shadow: 0 6px 0 rgba(0,0,0,.22); }
+.card .lbl { font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--red); letter-spacing: .04em; margin-bottom: 4px; }
+.card p { margin: 0; }
+.card + .card { margin-top: 0; }
+.order { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.order li { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; }
+.order b { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-size: 14px; }
+
+.chapter { text-align: center; align-items: center; padding-top: 44px; }
+.chapter .num { font-family: var(--font-display); font-weight: 800; color: var(--yellow); font-size: 20px; letter-spacing: .06em; }
+.chapter h2 { font-size: clamp(36px, 11vw, 52px); font-weight: 900; color: #fff; text-shadow: 0 3px 0 var(--red); }
+.chapter p { max-width: 32ch; margin: 0; color: #FFE9B8; font-size: 19px; }
+
+.spark { position: fixed; z-index: 50; width: 10px; height: 10px; background: var(--yellow); border-radius: 2px; pointer-events: none; animation: burst .9s ease-out forwards; }
+@keyframes burst { to { transform: translate(var(--dx), var(--dy)) rotate(260deg); opacity: 0; } }
+
+.loading { text-align: center; align-items: center; padding-top: 80px; }
+.phases { display: flex; gap: 10px; }
+.phases i { width: 22px; height: 22px; border-radius: 50%; background: var(--yellow); animation: ph 1.6s infinite; opacity: .25; }
+.phases i:nth-child(2) { animation-delay: .2s; } .phases i:nth-child(3) { animation-delay: .4s; } .phases i:nth-child(4) { animation-delay: .6s; } .phases i:nth-child(5) { animation-delay: .8s; }
+@keyframes ph { 50% { opacity: 1; transform: scale(1.25); } }
+
+/* ---------- الخصوصية والتعليمات ---------- */
+.steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.steps li { display: flex; gap: 12px; align-items: flex-start; }
+.steps b { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-family: var(--font-display); }
+.notice { border: 2px solid var(--yellow); border-radius: 16px; padding: 14px 16px; background: rgba(255,199,44,.1); color: #FFF1CC; font-size: 16px; }
+.notice b { color: var(--yellow); font-family: var(--font-display); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-weight: 700; color: var(--yellow); }
+.field input { font: inherit; font-size: 20px; padding: 14px 16px; border-radius: 14px; border: 3px solid var(--yellow); background: #fff; color: var(--ink); width: 100%; }
+
+/* ---------- التقرير (نهاري) ---------- */
+.report { gap: 18px; }
+.r-head { background: var(--red); color: #fff; border-radius: 22px; padding: 22px 20px 20px; position: relative; overflow: hidden; box-shadow: 0 7px 0 var(--red-deep); }
+.r-head h1 { font-size: clamp(30px, 9vw, 40px); font-weight: 900; color: #fff; }
+.r-head .who2 { color: var(--yellow-soft); margin-top: 4px; font-size: 17px; }
+.r-head .date { color: #FFD3CD; font-size: 14px; }
+.print-mark { position: absolute; left: -26px; top: -22px; width: 150px; opacity: .22; }
+.r-sum { font-size: 18px; margin-top: 12px; color: #fff; }
+.sec-t { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 900; color: var(--red-deep); margin-top: 6px; }
+.sec-t svg { width: 28px; height: 28px; flex: 0 0 auto; }
+.rc { background: #fff; border-radius: 20px; padding: 18px; box-shadow: 0 5px 0 var(--line); border: 2px solid var(--line); display: flex; flex-direction: column; gap: 12px; }
+.rc.pri { border-color: var(--yellow); }
+.rc h3 { font-size: 22px; font-weight: 800; color: var(--ink); }
+.rc .chip { align-self: flex-start; font-family: var(--font-display); font-weight: 700; font-size: 13.5px; background: var(--yellow); color: var(--ink); border-radius: 999px; padding: 2px 12px; }
+.rc .chip.soft { background: #FBE9E7; color: var(--red-deep); }
+.rc h4 { margin: 0; font-family: var(--font-display); font-size: 15px; color: var(--red); letter-spacing: .03em; }
+.rc p, .rc li { margin: 0; font-size: 16.5px; color: var(--ink); }
+.rc ul { margin: 0; padding: 0 20px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.rc .def { color: var(--ink-soft); }
+.ex { background: #FFF8E6; border-radius: 12px; padding: 10px 12px; font-size: 15.5px; }
+.ex small { display: block; color: var(--ink-soft); font-size: 14.5px; margin-top: 2px; }
+.tip { background: var(--ink); color: #fff; border-radius: 14px; padding: 12px 14px; }
+.tip h4 { color: var(--yellow); }
+.read { background: #fff; border: 2px dashed var(--yellow-deep); border-radius: 18px; padding: 16px 18px; color: var(--ink); }
+.read h3 { font-size: 19px; color: var(--red-deep); margin-bottom: 6px; }
+.read ul { margin: 0; padding: 0 20px 0 0; display: flex; flex-direction: column; gap: 6px; font-size: 16px; }
+.actions { display: flex; flex-direction: column; gap: 10px; }
+.toast { position: fixed; z-index: 60; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 700; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+
+@media (max-width: 380px) { .scene .av { width: 100px; } .opt, .bubble p { font-size: 16.5px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+@media print {
+  body, body.day { background: #fff !important; color: #000; padding: 0; }
+  body::before, .sky, .actions, .no-print, .toast { display: none !important; }
+  .app { max-width: none; } .screen { animation: none; padding: 0; }
+  .r-head { box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .rc, .read { break-inside: avoid; box-shadow: none; }
+  .tip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+</style>
+<div id="app" class="app"></div>
+<script>
+/* ============================================================
+   يوم مختلف | A Different Day: محتوى اللعبة (قابل للتعديل دون المساس بالواجهة أو المحرك)
+   المرجع الوحيد للكفاءات والسلوكيات: ملف SMX المرفق
+   ------------------------------------------------------------
+   الإشارة (signal) = S(الكفاءة، الاتجاه، القوة، المرجع، الملاحظة)
+     الاتجاه: +1 سلوك إيجابي مذكور في الملف | -1 يطابق بندًا من «ما لا تعنيه» | 0 محايد
+     القوة:   1 = مطابقة مباشرة | 0.5 = دلالة جزئية (استنتاج معقول)
+     المرجع:  رقم سلوك (B) أو بند «ما لا تعنيه» (N) من الجداول أدناه
+   ============================================================ */
+(function (root) {
+  const S = (c, d, k, r, n) => ({ c, d, k, r, n });
+
+  const competencies = [
+    { id: 'CU', name: 'الشغف بإرضاء العميل',
+      means: ['كن مستجيبًا لاحتياجات العملاء.', 'السعي الدائم لإيجاد طرق حديثة لتحسين تجربة العملاء.', 'السؤال باستمرار: «ما هو تقييم عملائنا لما نقوم به؟»'] },
+    { id: 'FO', name: 'التركيز على الأكثر أهمية',
+      means: ['تنفيذ أشياء قليلة بشكل أفضل.', 'التركيز المستمر على الأشياء التي سيكون لها التأثير الأكبر.', 'إلزام النفس والآخرين بالمسؤولية في تحقيق النتائج.'] },
+    { id: 'TA', name: 'الإرتقاء وتطوير الكوادر المتميزة',
+      means: ['الارتقاء المستمر بالمواهب في مختلف مستويات العمل.', 'توجيه الآخرين لإسراع عملية التعلم والتطوير.', 'تشجيع التنوع في الأفكار ووجهات النظر.'] },
+    { id: 'CO', name: 'التواصل بفاعلية وصراحة',
+      means: ['إظهار مهارات تواصل قوية (مهارات إرسال ومهارات استقبال).', 'توصيل المعلومات والأفكار بطريقة منفتحة ومعبّرة وفي الأوقات المناسبة.', 'الأخذ في الاعتبار الاختلافات الثقافية ووجهات نظر الآخرين عند التواصل.'] },
+    { id: 'CH', name: 'قيادة التغيير والإبتكار',
+      means: ['تحديد الاحتياجات المتغيرة لعملائنا والموظفين والنظام.', 'قيادة الابتكار الذي يطوّر الأعمال بنجاح.'] },
+    { id: 'PL', name: 'التخطيط والعمل بشكل إستراتيجي',
+      means: ['وضع رؤية أو استراتيجية أو خطة عمل واضحة ومقنعة.', 'ضمان التوافق مع أهداف المطعم والمؤسسة.'] },
+    { id: 'TW', name: 'تحقيق الأهداف من خلال العمل الجماعى',
+      means: ['العمل بشكل تعاوني كعضو في الفريق.', 'الالتزام بأهداف الفريق بشكل كلي بدلًا من الاهتمامات الخاصة.', 'الانفتاح لأفكار الآخرين المتنوعة.', 'تعزيز اختلافات الفريق لتحقيق النتائج.'] },
+    { id: 'IN', name: 'القيادة من خلال التأثير',
+      means: ['التأثير إيجابيًا على الآخرين.', 'التعاون بطرق تلهم الآخرين لاتخاذ إجراءات و/أو تغيير المنظور.'] }
+  ];
+
+  /* السلوكيات المتوقعة (من قوائم Behaviors). السلوكيات المقطوعة في الصور لم تُدرج. */
+  const behaviors = {
+    CU1: 'يفهم كيف تقدم ماكدونالدز القيمة للعملاء.',
+    CU2: 'هو مستهلك ملتزم وملاحظ جيد لتجربة العملاء خلال التفاعل مع ماكدونالدز ومنافسينا والعلامات التجارية الأخرى.',
+    CU3: 'يعترف ويقدّر واقع حياة عملائنا.',
+    CU4: 'يسعى للحصول على إفادة العملاء لفهم كيفية تنظيم العمل وتحديد الأولويات.',
+    CU5: 'يساهم بأفكار جديدة لتحسين تجربة العملاء ويتخذ الإجراءات المناسبة لتوصيل الأفكار للمستوى الأعلى.',
+    FO1: 'يقوم بتنظيم العمل من أجل التركيز على الأشياء ذات الأولوية القصوى.',
+    FO2: 'يعمل على فهم التفاصيل بعمق من أجل اتخاذ القرارات المناسبة فيما يلي من خطوات.',
+    FO3: 'يقوم بتقديم الأعمال بجودة عالية وبسرعة.',
+    FO4: 'إيجاد الطرق والحلول لفعل الأشياء باستخدام المصادر المتاحة.',
+    FO5: 'تحديد فرص التحسين من أجل أداء العمل بشكل أكثر كفاءة.',
+    FO6: 'لديه المبادرة لحل المشاكل الروتينية ويتفهم جيدًا متى يتم تصعيد الأمور.',
+    TA2: 'لديه السبق دائمًا في السعي لسؤال مديره عن أدائه وفرص التطوير.',
+    TA3: 'يقدم الإفادات للآخرين بشكل مستمر وبصدق بطريقة تحفيزية.',
+    TA4: 'يسعى دائمًا وبقوة للبحث عن فرص جديدة للتعلم والتطوير.',
+    TA5: 'يشارك ويتواصل مع الآخرين من أجل الإسراع في عملية التعليم.',
+    CO1: 'توصيل المعلومات والأفكار بطريقة منفتحة ومعبّرة وفي الأوقات المناسبة.',
+    CO2: 'الاستماع بعناية للآراء والأفكار المختلفة.',
+    CO3: 'التواصل مع الآخرين بطرق من شأنها احترام الاختلافات الثقافية ووجهات النظر.',
+    CO4: 'المساهمة بوجهة النظر علنًا حتى لو كانت متناقضة مع وجهة نظر الأغلبية.',
+    CH1: 'يصل لحل المشاكل بحماس وبشكل متفتح.',
+    CH2: 'يتكيف مع الطرق الجديدة المختلفة لفعل الأشياء.',
+    CH3: 'يقوم بتحديد فرص التحسين وتقويمها لتطوير الإجراءات.',
+    PL1: 'يقوم بربط الأنشطة الخاصة بأهداف واستراتيجيات مجموعة فريق العمل.',
+    PL2: 'يعزز ويوضح الالتزام الكامل برؤية المنظومة وقيمها وإنجاحها.',
+    PL3: 'يقوم بوضع وتطوير الخطط لإنجاز الأعمال مع الأخذ في الاعتبار تسلسل الأنشطة وتقدير الوقت المناسب لإنجازها واستخدام المصادر المطلوبة.',
+    PL4: 'تقسيم المهام إلى مهام قابلة للإدارة.',
+    PL5: 'تنسيق جهود التخطيط مع مجالات العمل الأخرى.',
+    TW1: 'لديه الاستعداد للتداخل والتواصل مع الآخرين من أجل إنجاز الأهداف الفردية وأهداف الفريق.',
+    TW2: 'يعمل دائمًا لمساعدة الآخرين.',
+    TW3: 'دائمًا يشارك المعلومات والتحديثات مع الآخرين.',
+    TW4: 'البحث عن فرص للتعاون مع الآخرين حتى وإن كانت وجهة نظره لا تتفق مع وجهات نظرهم.',
+    IN1: 'يقوم ببناء شبكات تواصل لزيادة الفاعلية لكل فرد في فريق العمل.',
+    IN2: 'يشارك الآخرين في الأعمال الخاصة بهم من خلال إظهار الشعور بالتفاؤل والملكية والالتزام.',
+    IN3: 'يوفر الأساس المنطقي السليم للحصول على دعم الأفكار والتوصيات.',
+    IN4: 'يقوم بربط الأفكار التي تحقق الغايات والفوائد.'
+  };
+
+  /* بنود «ما لا تعنيه الكفاءة» (تفسّر الإشارات السلبية/فرص التطوير) */
+  const notMeans = {
+    CUn1: 'أن نكون «شغوفين بالعميل» قولًا فقط وليس فعلًا.',
+    CUn2: 'الخلط بين «العملاء الداخليين» وعملائنا الخارجيين.',
+    CUn3: 'عدم إدراك فرص التأثير الإيجابي على العميل.',
+    FOn1: 'إعطاء الأولوية لما هو عاجل على ما هو مهم.',
+    FOn2: 'الدخول في مسار العمل اليومي دون الانتباه لتقييم الوضع الحالي.',
+    FOn3: 'عدم إتباع ما تم الاتفاق عليه في العمل باستمرار.',
+    TAn1: 'عدم مواجهة المحادثات الحادة أو إظهار «اللطف الزائف».',
+    TAn2: 'الرضا والاكتفاء بالمواهب متوسطة القدرات.',
+    TAn3: 'اكتناز المواهب المميزة أو تحييد قدراتهم في العمل.',
+    TAn4: 'التسامح مع أصحاب الأداء الضعيف.',
+    COn1: 'عدم الاستماع جيدًا.',
+    COn2: 'عدم التواصل بوضوح في الكتابة و/أو التواصل الشفوي.',
+    COn3: 'تجاهل وجهات النظر المختلفة والرسائل التي تتعارض مع وجهة نظرك.',
+    COn4: 'الاحتفاظ بالمعلومات ووجهة النظر دون الأخذ بها.',
+    CHn1: 'الثبات على كيفية القيام بالأشياء بشكل دائم.',
+    CHn2: 'تطبيق الحلول القديمة للمشاكل الجديدة.',
+    CHn3: 'مقاومة الأفكار الجديدة.',
+    CHn4: 'تجنب المخاطرة.',
+    PLn1: 'وجود فهم ضئيل أو معدوم للرؤية / الاستراتيجية أو كيفية ربط الأهداف الفردية أو الجماعية بها.',
+    PLn2: 'قضاء وقتًا طويلًا على عناصر تكتيكية جدًا خاصة بالمستوى الوظيفي.',
+    PLn3: 'العمل بشكل منغلق بدون رؤية واضحة.',
+    TWn1: 'التوجه نحو التحكم وعدم الثقة في الفريق في تأدية العمل.',
+    TWn2: 'الفشل في إنشاء أهداف مشتركة وحشد الفريق حول تلك الأهداف.',
+    TWn3: 'عدم تعزيز الاختلافات لخلق التآزر في الفريق.',
+    TWn4: 'استقطاع الموارد / المعلومات من الآخرين.',
+    INn1: 'الفشل في كثير من الأحيان في دعم الأفكار.',
+    INn2: 'عدم التحمس لتنشيط الآخرين.',
+    INn3: 'عدم جعل الآخرين يشعرون أن وجهة نظرهم قد سُمعت.',
+    INn4: 'إنجاز الأشياء فقط من خلال أسلوب القيادة التوجيهي.'
+  };
+
+  /* اقتراحات عملية لتطوير السلوكيات (صياغة المصمّمة/المساعد وليست من الملف، وتحتاج مراجعتك) */
+  const tips = {
+    CU1: 'اشرح لأحد أفراد فريقك بكلماتك كيف تصنع خدمة اليوم قيمة للعميل.',
+    CU2: 'خصّص عشر دقائق أسبوعيًا لتعيش تجربة العميل بنفسك: اطلب، وانتظر، وسجّل ما لاحظته.',
+    CU3: 'اسأل ثلاثة عملاء هذا الأسبوع عن ظروف زيارتهم (وقتهم، ومن يرافقهم)، وفكّر كيف تغيّر ذلك طريقة خدمتك.',
+    CU4: 'اجعل سؤال «ما رأيك فيما قدمناه اليوم؟» جزءًا ثابتًا من اجتماع الوردية، وأدخل إجابتين منه في خطة الغد.',
+    CU5: 'اكتب فكرة واحدة كل أسبوع لتحسين تجربة العميل، وارفعها لمديرك مع سبب واضح.',
+    FO1: 'في بداية الوردية اختر ثلاثة أمور فقط هي الأعلى أثرًا، واكتبها حيث يراها فريقك.',
+    FO2: 'قبل أي قرار مهم خذ دقيقتين لتسأل: ما التفاصيل التي لا أعرفها بعد؟',
+    FO3: 'اتفق مع فريقك على معيار «الجودة المقبولة» لمهمتين رئيسيتين، وراجعوه في نهاية الوردية.',
+    FO4: 'عند نقص مورد ما، اجمع الفريق خمس دقائق للتفكير في حلول بما هو متاح.',
+    FO5: 'سجّل أسبوعيًا خطوة واحدة تستهلك وقتًا بلا قيمة، واقترح طريقة أبسط لها.',
+    FO6: 'ضع قاعدة واضحة لما تحلّه بنفسك وما تصعّده ومتى، وشاركها مع فريقك.',
+    TA2: 'اطلب من مديرك كل شهر ملاحظة محددة عن أدائك وفرصة تطوير واحدة.',
+    TA3: 'قدّم لشخص واحد كل أسبوع إفادة صادقة عن موقف محدد: ابدأ بما أجاد فيه، وانتهِ بخطوة تالية.',
+    TA4: 'اختر مهارة تتعلمها هذا الشهر، وخصّص لها وقتًا ثابتًا في جدولك.',
+    TA5: 'اطلب من كل عضو متمكن أن يعلّم زميلًا مهارة واحدة، وتابعا معًا بعد أسبوعين.',
+    CO1: 'قبل أي رسالة مهمة اسأل نفسك: ما الفكرة الواحدة التي أريد أن تصل؟ ثم قلها بوضوح وفي وقت مناسب للمتلقي.',
+    CO2: 'في حوارك القادم أعد صياغة ما سمعته بكلماتك قبل أن ترد.',
+    CO3: 'قبل اجتماع مع فريق متنوع فكّر كيف قد يفهم كل شخص رسالتك بحسب خلفيته.',
+    CO4: 'في الاجتماع القادم قدّم رأيًا مختلفًا واحدًا بهدوء ومعه سببه.',
+    CH1: 'عند ظهور مشكلة جديدة ابدأ بسؤال: ما الذي تغيّر عن المرة السابقة؟',
+    CH2: 'جرّب أسلوبًا جديدًا في مهمة صغيرة لمدة أسبوع، ثم قيّم أثره مع الفريق.',
+    CH3: 'حدّد فرصة تحسين في إجراء متكرر، واختبرها على نطاق صغير وقِس النتيجة.',
+    PL1: 'اكتب جملة تربط خطة وردية هذا الأسبوع بهدف المطعم، وشاركها مع الفريق.',
+    PL2: 'ابدأ اجتماعك القادم بتذكير الفريق برؤية المطعم وقيمه، واربط بها مهمة اليوم.',
+    PL3: 'عند وضع خطة ليوم أو أسبوع رتّب الأنشطة بالتسلسل، وقدّر وقت كل نشاط والموارد التي يحتاجها.',
+    PL4: 'قسّم أي هدف كبير إلى مهام صغيرة قابلة للتنفيذ في يوم أو يومين.',
+    PL5: 'قبل اعتماد أي خطة اجلس مع زميل من قسم آخر لتتأكد من توافقها مع عمله.',
+    TW1: 'اعرض مساعدتك على زميل من فريق آخر في مهمة تعطل هدفًا مشتركًا.',
+    TW2: 'اختر وردية هذا الأسبوع لمساعدة زميل دون أن يطلب منك.',
+    TW3: 'أرسل تحديثًا مختصرًا في نهاية كل وردية بالمعلومات التي يحتاجها الفريق التالي.',
+    TW4: 'في خلافك القادم في الرأي ابحث أولًا عن نقطة اتفاق يمكنكما التعاون عليها.',
+    IN1: 'ابنِ علاقة عمل مع شخص في فريق آخر، وتعرّف على ما يحتاجه ليكون أكثر فاعلية.',
+    IN2: 'أظهر حماسك والتزامك بعمل زميل وشاركه فيه بدل الاكتفاء بالتوجيه.',
+    IN3: 'قبل اقتراح فكرة جديدة جهّز سببين منطقيين وأثرًا متوقعًا.',
+    IN4: 'اربط فكرتك بالغاية التي يهتم بها من تخاطبه، وبيّن الفائدة له.'
+  };
+
+  /* ---------- يوم مختلف: يوم عادي في القاهرة من الصبح لآخر الليل ----------
+     الحقول الجديدة (لا تؤثر على الحساب):
+       time/place: وقت المشهد ومكانه  |  say: حوار قصير  |  set: علامة تُسجَّل عند اختيار هذا القرار
+       ctx: أسطر «اللي حصل قبل كده» تظهر في موقف لاحق إذا سُجّلت العلامة (if). صياغتها محايدة، فيها ميزة وتكلفة. */
+  const chapters = [
+    { n: 1, name: 'الصبح', time: '٧:٢٠ ص', glow: '#FFB347', intro: 'المنبّه ماضربش. البيت صاحي قبلك، والموبايل بيرن من بدري.' },
+    { n: 2, name: 'الشغل', time: '٩:٤٥ ص', glow: '#FFC72C', intro: 'وصلت الشركة. الفريق مستنيك، والجمعة البيضاء على الأبواب.' },
+    { n: 3, name: 'الضهر', time: '١٢:٣٠ م', glow: '#FFD966', intro: 'الشغل بقى مضغوط، والتليفونات مبتبطلش.' },
+    { n: 4, name: 'الغدا والاجتماع', time: '٢:١٠ م', glow: '#FFB347', intro: 'استراحة قصيرة، وبعدها اجتماع مهم.' },
+    { n: 5, name: 'العصر', time: '٤:٠٠ م', glow: '#FF8A3D', intro: 'الشمس بتميل، وفيه قرارات لازم تتاخد قبل آخر النهار.' },
+    { n: 6, name: 'آخر النهار', time: '٦:٠٠ م', glow: '#E8502F', intro: 'الزحمة في الشوارع، والمشاكل بتيجي مرة واحدة.' },
+    { n: 7, name: 'بالليل', time: '٨:٠٠ م', glow: '#C23A4B', intro: 'خلّصت شغل، بس اليوم لسه ما خلصش.' },
+    { n: 8, name: 'آخر اليوم', time: '٩:٤٥ م', glow: '#7A2A55', intro: 'البيت هادي أخيرًا. فاضل كام قرار قبل ما اليوم يخلص.' }
+  ];
+
+  /* المواقف: 16 موقفًا، لكل كفاءة 4 فرص قياس بالضبط (إشارات التقييم كما اعتُمدت في المصفوفة) */
+  const scenarios = [
+    /* ---------- الصبح ---------- */
+    { id: 's1', ch: 1, type: 'rank', who: 'mama', time: '٧:٢٠ ص', place: 'home', comps: ['FO', 'TW'], title: 'صباح زحمة',
+      text: 'المنبّه ماضربش. عرض الجمعة البيضاء عند أ. مها الساعة ١٠:٣٠ لسه محتاج مراجعة، وبابا مسافر، والبيت كله بيتحرك مرة واحدة.',
+      say: [{ w: 'malak', t: 'عندي امتحان الساعة ٩ في الكلية! توصّلني ولا أطلب أوبر؟' }, { w: 'mama', t: 'ولو معدّي على الصيدلية، هاتلي الدوا بتاعي.' }],
+      options: [
+        { id: 'a', t: 'أراجع العرض عشر دقايق الأول، هو أهم حاجة النهارده، وبعدها أشوف الباقي.', o: 'العرض اتظبط، بس ملك استنّت شوية وماما اتضايقت.', set: 'prep_first',
+          s: [S('FO', 1, 1, 'FO1', 'تقديم ما له الأثر الأكبر على ما هو ملحّ')] },
+        { id: 'b', t: 'أقعد دقيقتين مع ملك وماما وأوزّع الشغل: ملك تطلب أوبر وأنا أتابع رحلتها، وأجيب الدوا في طريقي، ونطمّن على بعض بعد ساعة.', o: 'كله اتحرك مع بعض، بس خدت وقت في الكلام قبل ما أبدأ في العرض.', set: 'family_synced',
+          s: [S('TW', 1, 1, 'TW3', 'إشراك الفريق في تقسيم العمل وتبادل التحديثات'), S('FO', 1, 0.5, 'FO1', 'تنظيم العمل بين المجموعات حسب الأولويات')] },
+        { id: 'c', t: 'أفتح رسالة أ. مها اللي لسه واصلة وأرد عليها الأول، هي أول حاجة هتسأل عنها.', o: 'ردّيت بسرعة وأ. مها اطمّنت، بس ملك وماما استنوا من غير ما حد يتابعهم.', set: 'boss_first',
+          s: [S('FO', -1, 0.5, 'FOn1', 'تقديم ما هو عاجل على ما هو مهم')] },
+        { id: 'd', t: 'أوصّل ملك بنفسي وأنا لابس، العيلة أهم، والعرض أتصرف فيه في المكتب.', o: 'ملك لحقت امتحانها وفرحت، بس هتوصل الشغل متأخر وتدخل العرض بسرعة.', set: 'drove_sister',
+          s: [S('TW', 1, 0.5, 'TW2', 'مساندة الفريق بالمشاركة المباشرة'), S('FO', 0, 0)] }
+      ] },
+    { id: 's2', ch: 1, type: 'social', who: 'hala', time: '٨:٤٠ ص', place: 'street', comps: ['CU', 'CO'], title: 'مكالمة في الطريق',
+      text: 'بتتحرك للشغل في زحمة الصبح. رقم غريب بيتصل. دي أ. هالة، عميلة طلبت أوضة أطفال كاملة، والتوصيل اتأجل مرتين.',
+      say: [{ w: 'hala', t: 'الأوضة المفروض توصل من أسبوع! ولادي نايمين على الأرض ومحدش بيرد عليّا في خدمة العملاء!' }],
+      options: [
+        { id: 'a', t: 'أسيبها تفضفض لحد ما تخلص، وبعدين أسألها كانت متوقعة إيه من التوصيل بالظبط وأسجّل كلامها.', o: 'هدت وادّتني معلومات مفيدة، بس المكالمة خدت ربع ساعة من وقت الطريق.', set: 'cust_listened',
+          s: [S('CU', 1, 0.5, 'CU4', 'طلب إفادة العميل لفهم ما يهمه'), S('CO', 1, 0.5, 'CO2', 'الاستماع بعناية قبل الرد')] },
+        { id: 'b', t: 'أعتذر وأشرحلها بهدوء سبب التأخير (عطل في عربية النقل) وميعاد التوصيل الجديد.', o: 'فهمت الموقف وهدأت، بس محستش إن حد سألها محتاجة إيه.', set: 'cust_explained',
+          s: [S('CO', 1, 1, 'CO1', 'توضيح الصورة بانفتاح وفي الوقت المناسب')] },
+        { id: 'c', t: 'أقولها إني هبعتلها كوبون خصم وهدية صغيرة للأطفال، وأنهي المكالمة بسرعة عشان الطريق.', o: 'اتبسطت من الهدية، بس مشكلة المواعيد نفسها ما اتحلتش.', set: 'cust_voucher',
+          s: [S('CU', 1, 0.5, 'CU3', 'الاستجابة لحاجة العميل بسرعة'), S('CO', -1, 0.5, 'COn1', 'الانتقال إلى الحل دون الاستماع لتفاصيل الشكوى')] },
+        { id: 'd', t: 'أوضّحلها إن مواعيد التوصيل مكتوبة في الأوردر وإن النظام ما يسمحش أغيّر النهارده، وأعتذر عن الإزعاج.', o: 'المعلومة كانت واضحة ومحدش اتفاجئ، بس هالة قفلت المكالمة مش راضية.', set: 'cust_policy',
+          s: [S('CU', -1, 0.5, 'CUn3', 'ترك فرصة للتأثير الإيجابي على العميل'), S('CO', 1, 0.5, 'CO1', 'وضوح الرسالة وصراحتها')] }
+      ] },
+    /* ---------- الشغل ---------- */
+    { id: 's3', ch: 2, type: 'decision', who: 'maha', time: '٩:٤٥ ص', place: 'office', comps: ['PL', 'TA'], title: 'خطة الجمعة البيضاء',
+      text: 'وصلت الشركة. أ. مها عايزة خطة الفريق للجمعة البيضاء قبل آخر النهارده، ومعاك وقت تعمل حاجة واحدة بس من اللي تحت. سلمى وكريم قاعدين جنبك وبيتابعوا.',
+      say: [{ w: 'maha', t: 'محتاجة أعرف الفريق هيشتغل إزاي لحد الجمعة البيضاء. النهارده لو أمكن.' }],
+      ctx: [{ if: 'family_synced', t: 'ماما بعتتلك واتساب: «الدوا وصل، متشغلش بالك». اليوم بدأ هادي.' }, { if: 'drove_sister', t: 'وصلت متأخر ربع ساعة، بس ملك لحقت امتحانها.' }, { if: 'prep_first', t: 'العرض اتراجع قبل ما تتحرك، وملك طلبت أوبر بنفسها.' }, { if: 'boss_first', t: 'أ. مها شافت ردّك السريع، وملك وصلت في آخر لحظة بأوبر.' }],
+      options: [
+        { id: 'a', t: 'أعمل خطة من ٣ مراحل تربط كل نشاط بهدف الفريق في الجمعة البيضاء، وأحدد توقيت وموارد كل مرحلة.', o: 'خطة محكمة ومقنعة لمها، بس طلعت بصوت واحد: صوتي.', set: 'plan_solo',
+          s: [S('PL', 1, 1, 'PL3', 'تسلسل الأنشطة وتقدير الوقت والموارد'), S('TA', 0, 0)] },
+        { id: 'b', t: 'أحط إطار عام للخطة وأسيب سلمى وكريم يكتبوا تفاصيلها، وأراجعها معاهم عشان أشوف طريقة تفكيرهم.', o: 'اتعلموا كتير، بس الخطة طلعت أقل إحكامًا مما كنت عايز.', set: 'plan_shared',
+          s: [S('TA', 1, 0.5, 'TA5', 'إسراع التعلم عبر المشاركة في العمل الحقيقي'), S('PL', 1, 0.5, 'PL4', 'تقسيم العمل إلى مهام قابلة للإدارة')] },
+        { id: 'c', t: 'أبدأ بتفاصيل شغل أول أسبوعين وأأجّل الباقي لحد ما الصورة تتضح، وأوزّع المهام على اللي عايز يتعلم.', o: 'الفريق اتحرك بسرعة، بس الصورة الكبيرة فضلت مش واضحة لمها.', set: 'plan_short',
+          s: [S('PL', -1, 0.5, 'PLn2', 'الانشغال بالتفاصيل التكتيكية قبل الصورة الكبرى'), S('TA', 0, 0)] },
+        { id: 'd', t: 'أعرض على مها خطة مبسّطة وأطلب من المبيعات والمخزن يقولوا إيه الناقص قبل ما أكمل التفاصيل.', o: 'الخطة طلعت متوافقة مع الأقسام كلها، بس خدت اجتماعين زيادة.', set: 'plan_cross',
+          s: [S('PL', 1, 0.5, 'PL5', 'تنسيق الخطة مع مجالات العمل الأخرى'), S('TA', 0, 0)] }
+      ] },
+    { id: 's4', ch: 2, type: 'tradeoff', who: 'mansour', time: '١١:١٥ ص', place: 'office', comps: ['CH', 'IN'], title: 'التطبيق الجديد',
+      text: 'سلمى اقترحت تطبيق لتوزيع الأوردرات على المناديب بدل الشيت القديم. أ. منصور، أقدم منسق عندكم، مش مقتنع.',
+      say: [{ w: 'salma', t: 'جرّبته على ٢٠ أوردر امبارح والتأخير قلّ جدًا. محتاجة موافقة بس.' }, { w: 'mansour', t: 'الشيت ده شغّال بقاله ١٢ سنة وعمره ما وقّعنا.' }],
+      options: [
+        { id: 'a', t: 'أجرّب التطبيق أسبوع مع مجموعة صغيرة بقيادة سلمى، ونعرض الأرقام على الكل قبل ما نقرر.', o: 'الأرقام وضّحت الصورة، بس الجمعة البيضاء قربت وخسرنا أسبوع تجربة.', set: 'pilot_run',
+          s: [S('CH', 1, 1, 'CH3', 'اختبار فرصة التحسين وتقويمها'), S('IN', 1, 0.5, 'IN3', 'تقديم أساس منطقي لدعم الفكرة')] },
+        { id: 'b', t: 'أقعد مع أ. منصور وأطلب منه هو اللي يحدد معيار نجاح التجربة.', o: 'أ. منصور حس بالاحترام، بس التجربة اتأجلت.', set: 'mansour_onboard',
+          s: [S('IN', 1, 1, 'IN2', 'جعل صاحب الرأي شريكًا في القرار'), S('CH', 0, 0)] },
+        { id: 'c', t: 'أسيب الشيت القديم دلوقتي لحد ما تعدّي الجمعة البيضاء، وأفتح الموضوع بعدها.', o: 'الشغل ماشي بأمان، بس ممكن الفرصة تروح.', set: 'old_way',
+          s: [S('CH', -1, 0.5, 'CHn4', 'تأجيل التجربة تفاديًا للمخاطرة')] },
+        { id: 'd', t: 'أقرر إننا نشتغل بالتطبيق من بكرة، الوقت مش في صالحنا.', o: 'الشغل بقى أسرع، بس أ. منصور بقى أقل حماسًا.', set: 'forced_new',
+          s: [S('CH', 1, 0.5, 'CH2', 'التحول السريع إلى طريقة جديدة'), S('IN', -1, 0.5, 'INn4', 'الاعتماد على الأمر وحده لتحقيق القرار')] }
+      ] },
+    /* ---------- الضهر ---------- */
+    { id: 's5', ch: 3, type: 'problem', who: 'layla', time: '١٢:٣٠ م', place: 'office', comps: ['TW', 'CU'], title: 'خلاف على خانتين',
+      text: 'ناصر وكريم مختلفين على مين ياخد خانتين التوصيل السريع يوم الخميس، وكل واحد عنده أوردرات مستعجلة. ليلى من خدمة العملاء معاها معلومة تهمّك.',
+      say: [{ w: 'layla', t: 'أغلب الطلبات اللي جاية فيها هدايا وأدوية، والعملاء دول بيبقوا مستعجلين فعلًا.' }, { w: 'karim', t: 'وأنا أوردراتي كلها مستعجلة برضه!' }],
+      ctx: [{ if: 'mansour_onboard', t: 'أ. منصور عدّى عليك بسيط وقال إنه مبسوط إنك سألته.' }, { if: 'forced_new', t: 'أ. منصور بيدخل الأوردرات في التطبيق الجديد وهو مش مرتاح.' }, { if: 'pilot_run', t: 'سلمى بتجمّع أرقام التجربة وبتقولك إنها هتبقى جاهزة بكرة.' }],
+      options: [
+        { id: 'a', t: 'أجمعهم وأوريهم بيانات مواعيد العملاء، وأطلب منهم نتفق على قاعدة واحدة.', o: 'اتفقوا على قاعدة تمشي على الكل، بس الاجتماع خد ساعة.', set: 'rule_agreed',
+          s: [S('TW', 1, 1, 'TW3', 'مشاركة المعلومات وبناء قاعدة مشتركة')] },
+        { id: 'b', t: 'أوزّع الخانتين حسب اللي يخدم العملاء أكتر: الهدايا والأدوية الأول.', o: 'رضا العملاء زاد، بس حد من الزملاء حس إن رأيه ما اتسمعش.', set: 'slots_by_cust',
+          s: [S('CU', 1, 1, 'CU3', 'تقدير احتياج العملاء الفعلي'), S('TW', -1, 0.5, 'TWn1', 'حسم الأمر منفردًا دون إشراك الأطراف')] },
+        { id: 'c', t: 'أقترح نتناوب على الخانتين كل أسبوع عشان الكل يحس بالعدل.', o: 'الخلاف هدي، بس عملاء كتير فضلوا مستنيين.', set: 'rotation',
+          s: [S('TW', 1, 0.5, 'TW1', 'التقريب بين الأطراف لإنجاز هدف مشترك'), S('CU', -1, 0.5, 'CUn2', 'تقديم الاعتبارات الداخلية على تجربة العميل')] },
+        { id: 'd', t: 'أدّي الخانتين للأقدم اتنين، وأدّي التالت شغل بديل وأتابع ملاحظاته.', o: 'الموضوع اتحسم بسرعة، بس التالت ما خبّاش ضيقه.', set: 'senior_slots',
+          s: [S('TW', 0, 0), S('CU', 0, 0)] }
+      ] },
+    { id: 's6', ch: 3, type: 'tradeoff', who: 'layla', time: '١:١٥ م', place: 'office', comps: ['CO', 'FO'], title: 'خبر مش حلو من المورّد',
+      text: 'مكالمة من مورّد الكراتين: الشحنة هتتأخر يومين، والجمعة البيضاء قربت، والفريق متحمس جدًا.',
+      say: [{ w: 'layla', t: 'المورّد لسه مكلمني. الشحنة هتتأخر يومين.' }],
+      options: [
+        { id: 'a', t: 'أقول للفريق دلوقتي بصراحة وأطلب أفكارهم، حتى لو الخبر هيقلل حماسهم.', o: 'الفريق طلع بأفكار حلوة، بس الحماس قلّ كام ساعة.', set: 'team_told',
+          s: [S('CO', 1, 1, 'CO1', 'مشاركة المعلومة بانفتاح وفي وقتها')] },
+        { id: 'b', t: 'أأجّل الخبر لحد ما ألاقي حل مؤقت، وأقولهم الخبر والحل مع بعض.', o: 'لقيت بديل مؤقت، بس حد من الفريق عرف الخبر من برّه قبلك.', set: 'told_late',
+          s: [S('CO', -1, 0.5, 'COn4', 'الاحتفاظ بالمعلومة مؤقتًا'), S('FO', 1, 0.5, 'FO4', 'البحث عن حل بالمتاح')] },
+        { id: 'c', t: 'أرتّب الشغل نبدأ بالحاجات اللي مش محتاجة الكراتين، وأبلّغ المشرفين بس بالتفاصيل.', o: 'الشغل كمّل من غير توقف، بس باقي الفريق مفهمش ليه الترتيب اتغيّر.', set: 'sup_only',
+          s: [S('FO', 1, 1, 'FO1', 'تنظيم العمل حول ما يمكن إنجازه الآن'), S('CO', 0, 0)] },
+        { id: 'd', t: 'أتصل بالمورّد وأطلب ميعاد أبكر، وأوضّح للفريق اللي عارفينه واللي لسه معرفناهوش.', o: 'الكل فاهم الوضع، بس مكالمات المورّد خدت منك وقت.', set: 'asked_supplier',
+          s: [S('CO', 1, 0.5, 'CO1', 'وضوح الرسالة بما هو معلوم وغير معلوم'), S('FO', -1, 0.5, 'FOn1', 'الانشغال بالعاجل على حساب بقية الأولويات')] }
+      ] },
+    /* ---------- الغدا والاجتماع ---------- */
+    { id: 's7', ch: 4, type: 'social', who: 'salma', time: '٢:١٠ م', place: 'cafe', comps: ['TA', 'CH'], title: 'غدا مع سلمى',
+      text: 'بتاكل غدا سريع في الكافيه اللي جنب الشركة، وسلمى قعدت معاك. عندها فكرة لتبسيط إجراءات المرتجعات، وعايزة تقدّم سيشن تدريب صغير للفريق.',
+      say: [{ w: 'salma', t: 'أنا جرّبت الطريقة دي لوحدي على كام مرتجع ونفعت. ممكن أعرضها على الفريق؟' }],
+      ctx: [{ if: 'pilot_run', t: 'سلمى لسه فرحانة إن تجربة التطبيق نجحت.' }, { if: 'forced_new', t: 'سلمى لاحظت إن الفريق مش متقبّل التطبيق الجديد، وباين عليها القلق.' }, { if: 'old_way', t: 'سلمى فهمت إن التطبيق مؤجّل لبعد الجمعة البيضاء، وسكتت.' }],
+      options: [
+        { id: 'a', t: 'أديها فرصة مع مجموعة صغيرة، وأقعد معاها بعد السيشن وأديها ملاحظاتي بصراحة.', o: 'سلمى اتطورت بسرعة، بس المجموعة لاحظت إن الموضوع تجريبي.', set: 'salma_leads',
+          s: [S('TA', 1, 0.5, 'TA3', 'إفادة صادقة تحفز على التطور'), S('CH', 1, 0.5, 'CH2', 'الانفتاح على طريقة جديدة')] },
+        { id: 'b', t: 'أطلب منها تجرب فكرتها بنفسها وتعرضلي النتايج.', o: 'أثر الفكرة وضح بسرعة، بس سلمى ماخدتش توجيه كفاية.', set: 'salma_tests',
+          s: [S('CH', 1, 1, 'CH3', 'اختبار فكرة تحسين وتقويمها'), S('TA', 0, 0)] },
+        { id: 'c', t: 'أشكرها وأقولها تستنى لحد ما تاخد خبرة أكتر، الطريقة الحالية شغّالة كويس.', o: 'الأمور استقرت، بس حماس سلمى قلّ.', set: 'salma_waits',
+          s: [S('CH', -1, 0.5, 'CHn3', 'تأجيل الفكرة الجديدة'), S('TA', 0, 0)] },
+        { id: 'd', t: 'أخلي حد من الفريق القديم يتابعها ويرشدها، وأنا أقدّم السيشن.', o: 'اتعلمت من مرشدها، بس الطريقة الجديدة ما اتجرّبتش.', set: 'salma_mentored',
+          s: [S('TA', 1, 0.5, 'TA5', 'ربط الموهبة بمن يسرّع تعلمها'), S('CH', 0, 0)] }
+      ] },
+    { id: 's8', ch: 4, type: 'decision', who: 'adel', time: '٣:٠٠ م', place: 'meeting', comps: ['IN', 'PL'], title: 'اجتماع الميزانية',
+      text: 'بعد ساعة عندك اجتماع ميزانية مع أ. عادل من المالية وأ. مها. عايز تطلب موظفين مؤقتين للجمعة البيضاء، وعادل قلقان من التكلفة.',
+      say: [{ w: 'adel', t: 'الميزانية مضغوطة السنة دي. هنبرّر الزيادة دي إزاي؟' }],
+      options: [
+        { id: 'a', t: 'أعرض الأرقام والمنطق خطوة خطوة، وأربط الزيادة بأهداف الشركة للسنة.', o: 'أغلب الحاضرين اقتنعوا، بس حد منهم حس إن القرار متحضّر من قبل الاجتماع.', set: 'budget_full',
+          s: [S('IN', 1, 0.5, 'IN3', 'تقديم أساس منطقي للتوصية'), S('PL', 1, 0.5, 'PL1', 'ربط الخطوة بأهداف الشركة')] },
+        { id: 'b', t: 'أروح لأ. عادل وأ. مها دلوقتي كل واحد لوحده، وأفهم أولوياته قبل الاجتماع وأبني الدعم تدريجيًا.', o: 'الاجتماع هيبقى هادي ومدعوم، بس الساعة كلها راحت في اللقاءات.', set: 'budget_pre',
+          s: [S('IN', 1, 1, 'IN1', 'بناء شبكة تواصل قبل القرار'), S('PL', 0, 0)] },
+        { id: 'c', t: 'أطلب على مرحلتين: جزء دلوقتي وجزء بعد ما نشوف النتيجة، عشان الموافقة تبقى أسرع.', o: 'خدت موافقة جزئية بسرعة، بس المرحلة التانية فضلت معلّقة.', set: 'budget_stages',
+          s: [S('PL', 1, 1, 'PL3', 'تسلسل المراحل وتقدير التوقيت والموارد'), S('IN', 0, 0)] },
+        { id: 'd', t: 'أحدد اللي محتاجه بس وأطلب القرار في نفس الاجتماع، وأفكّرهم إن الصلاحية معايا.', o: 'القرار خرج في نفس الجلسة، بس ناس فضلت متحفظة.', set: 'budget_authority',
+          s: [S('IN', -1, 0.5, 'INn4', 'الاعتماد على الصلاحية بدل كسب الدعم'), S('PL', 0, 0)] }
+      ] },
+    /* ---------- العصر ---------- */
+    { id: 's9', ch: 5, type: 'rank', who: 'maha', time: '٤:٠٠ م', place: 'office', comps: ['PL', 'CU'], title: 'أسبوعين قبل الجمعة البيضاء',
+      text: 'فاضل أسبوعين على الجمعة البيضاء، وعندك أربع مبادرات ممكن تبدأ بيهم، ومعاك وقت لتلاتة بس.',
+      ctx: [{ if: 'cust_listened', t: 'أ. هالة بعتت رسالة: «شكرًا إن حد سمعني». الأوضة وصلت النهارده.' }, { if: 'cust_voucher', t: 'أ. هالة استخدمت الكوبون، وبعتت تسأل لو الأوردر الجاي هيتأخر برضه.' }, { if: 'cust_policy', t: 'أ. هالة كتبت تقييم على صفحة الشركة إنها حسّت إن محدش سمعها.' }, { if: 'cust_explained', t: 'أ. هالة استلمت الأوضة وبعتت: «تمام، شكرًا على التوضيح».' }],
+      options: [
+        { id: 'a', t: 'أربط جدول التسليم بأهداف الجمعة البيضاء وأهداف الشركة للسنة.', o: 'الصورة الكبيرة اتضحت، بس تفاصيل اليوم بقت لبعدين.',
+          s: [S('PL', 1, 1, 'PL1', 'ربط الأنشطة بالأهداف الأكبر')] },
+        { id: 'b', t: 'أجهّز رسايل تتبع واضحة وفريق ردود سريع للعملاء وقت الزحمة.', o: 'العملاء هيعرفوا أوردراتهم فين، بس الجدول لسه ما اتحدّثش.',
+          s: [S('CU', 1, 0.5, 'CU3', 'تقدير ظروف العملاء وقت الزحمة')] },
+        { id: 'c', t: 'أقسّم شغل الأسبوعين لمهام صغيرة وأوزعها في جدول يومي.', o: 'الشغل بقى منظم يوم بيوم، بس من غير اتجاه واضح للموسم.',
+          s: [S('PL', 1, 0.5, 'PL4', 'تقسيم العمل إلى مهام قابلة للإدارة')] },
+        { id: 'd', t: 'أسأل عملاء قدام إيه اللي بيخليهم يطلبوا تاني، وأبني الجدول على كلامهم.', o: 'رغباتهم وضحت، بس كلامهم مش متفق مع شوية خطط جاهزة.',
+          s: [S('CU', 1, 0.5, 'CU4', 'بناء الأولويات على إفادة العملاء'), S('PL', -1, 0.5, 'PLn3', 'الانتقال بلا ربط واضح بالخطة العامة')] }
+      ] },
+    { id: 's10', ch: 5, type: 'social', who: 'karim', time: '٤:٥٠ م', place: 'office', comps: ['TA', 'CO'], title: 'كلام صعب مع كريم',
+      text: 'كريم شاطر جدًا في تظبيط الأوردرات المعقدة، بس بيحتفظ بالحيل لنفسه وساعات بيتأخر في التسليم. محتاج تتصرف.',
+      say: [{ w: 'karim', t: 'أنا عايز أخلّص الأوردرات الأول. مفيش وقت للشرح.' }],
+      ctx: [{ if: 'plan_shared', t: 'كريم كان معاك في الخطة الصبح وساهم بجزء منها.' }, { if: 'plan_solo', t: 'كريم لاحظ إن الخطة اتعملت من غير ما حد من الفريق يشارك.' }, { if: 'rule_agreed', t: 'كريم وافق على قاعدة خانتين الخميس، بس بيقول إنها ضيّقت عليه.' }],
+      options: [
+        { id: 'a', t: 'أقعد معاه لوحدنا وأقوله بصراحة اللي لاحظته وإيه اللي ممكن يحصل لو شاركنا خبرته.', o: 'كريم اتأثر بس فهم الصورة، والعلاقة محتاجة وقت تهدى.', set: 'karim_direct',
+          s: [S('TA', 1, 0.5, 'TA3', 'إفادة صادقة تحفز على التطور'), S('CO', 1, 0.5, 'CO1', 'قول الأمر بوضوح وفي مكان مناسب')] },
+        { id: 'b', t: 'أطلب منه يدرّب اتنين من الفريق، وأستنى المعنى يوصله من غير كلام مباشر عن التأخير.', o: 'خبرته انتقلت للفريق، بس موضوع التأخير ما اتحسمش.', set: 'karim_mentor',
+          s: [S('TA', 1, 0.5, 'TA5', 'تحويل خبرته إلى تعلّم للآخرين'), S('CO', -1, 0.5, 'COn2', 'ترك الرسالة غير واضحة')] },
+        { id: 'c', t: 'أتكلم معاه في اجتماع الصبح قدام الفريق عشان الكل يشوف نفس المعايير.', o: 'المعايير اتضحت للكل، بس كريم اتحرج.', set: 'karim_public',
+          s: [S('TA', 0, 0), S('CO', -1, 0.5, 'COn2', 'اختيار توقيت ومكان غير ملائمين للرسالة')] },
+        { id: 'd', t: 'أسمع أسباب تأخيره الأول، يمكن فيه حاجات مش عارفها، وأأجّل الملاحظات.', o: 'عرفت ظروفه وكسبت ثقته، بس الأمور لسه زي ما هي.', set: 'karim_listen',
+          s: [S('CO', 1, 1, 'CO2', 'الاستماع العميق قبل الحكم'), S('TA', -1, 0.5, 'TAn1', 'تأجيل المحادثة الحادة')] }
+      ] },
+    /* ---------- آخر النهار ---------- */
+    { id: 's11', ch: 6, type: 'tradeoff', who: 'mansour', time: '٦:٠٠ م', place: 'office', comps: ['CH', 'TW'], title: 'السيستم وقع',
+      text: 'السيستم وقع في الوقت اللي المفروض الأوردرات تتوزع فيه على المناديب. الخطة العادية مش شغّالة، والمناديب مستنيين.',
+      say: [{ w: 'mansour', t: 'لو عايزين نرجع للشيت القديم، النسخة معايا.' }],
+      ctx: [{ if: 'pilot_run', t: 'الفريق مجرّب التطبيق الجديد من أسبوع، فالكل عارفه نوعًا ما.' }, { if: 'forced_new', t: 'التطبيق الجديد اللي اتفرض هو اللي واقع، وبعض الناس مش متحمسة تبدأ من الأول.' }, { if: 'old_way', t: 'الشيت القديم لسه موجود، وأ. منصور محتفظ بنسخة منه.' }, { if: 'mansour_onboard', t: 'أ. منصور كان شغّال على معيار التجربة، وعنده نسخة احتياطية من الشيت.' }],
+      options: [
+        { id: 'a', t: 'أحوّل فورًا للتوزيع اليدوي على واتساب، وأشرح للفريق بعد ما نتحرك.', o: 'الأوردرات خرجت في الميعاد، بس بعض الناس حسّوا إن القرار اتفرض عليهم.', set: 'sys_switch',
+          s: [S('CH', 1, 1, 'CH2', 'التكيف السريع مع طريقة مختلفة'), S('TW', -1, 0.5, 'TWn1', 'حسم الأمر دون إشراك الفريق')] },
+        { id: 'b', t: 'أجمع المشرفين وأسمع اقتراحاتهم، حتى لو خدنا ساعة.', o: 'القرار طلع غني بالأفكار، بس الأوردرات اتأخرت أثناء الاجتماع.', set: 'sys_listen',
+          s: [S('TW', 1, 1, 'TW4', 'الانفتاح على أفكار الآخرين المتنوعة'), S('CH', 0, 0)] },
+        { id: 'c', t: 'أستنى فريق التقنية يصلّح السيستم، وأعيد التقييم الصبح.', o: 'محدش اتلخبط، بس شغل يوم كامل اتأجل.', set: 'sys_wait',
+          s: [S('CH', -1, 0.5, 'CHn4', 'تجنب المخاطرة وتأجيل القرار')] },
+        { id: 'd', t: 'أبعت اتنين يجرّبوا بديل سريع، وأجهّز مع الباقيين خطة احتياطية تتفعّل حسب تقريرهم.', o: 'البديل الأنسب بان، بس استنينا ساعات على التقرير.', set: 'sys_test',
+          s: [S('CH', 1, 0.5, 'CH3', 'تقويم الفرصة الجديدة قبل اعتمادها'), S('TW', 1, 0.5, 'TW1', 'إشراك الفريق في الخطة البديلة')] }
+      ] },
+    { id: 's12', ch: 6, type: 'problem', who: 'salma', time: '٦:٥٠ م', place: 'office', comps: ['IN', 'FO'], title: 'المرتجعات بتزيد',
+      text: 'نسبة المرتجعات زادت فجأة النهارده. أ. منصور بيقول إن ده بيحصل كل سنة قبل الجمعة البيضاء وهيعدّي. سلمى لاحظت إن أغلب المرتجعات من مناطق جديدة. وليلى بتقول إن العملاء بدأوا يسألوا.',
+      say: [{ w: 'salma', t: 'العناوين في المناطق الجديدة مش واضحة على الخريطة، وده بيعمل لخبطة.' }],
+      ctx: [{ if: 'salma_leads', t: 'سلمى لسه متحمسة من السيشن اللي قدمتها.' }, { if: 'salma_tests', t: 'سلمى جاهزة تجرّب أي حل بنفسها.' }, { if: 'salma_waits', t: 'سلمى بتقول رأيها بصوت واطي النهارده.' }],
+      options: [
+        { id: 'a', t: 'أعرض على الكل اللي لاحظته، وأربط كل ملاحظة بالسبب الأرجح، وأطلب دعمهم لخطة تصحيح العناوين.', o: 'الكل التفّ حول الخطة، بس التصحيح بدأ متأخر.', set: 'ret_plan',
+          s: [S('IN', 1, 0.5, 'IN3', 'تقديم أساس منطقي لكسب الدعم'), S('FO', 1, 0.5, 'FO2', 'فهم التفاصيل بعمق قبل اتخاذ الخطوة التالية')] },
+        { id: 'b', t: 'أركّز على السبب الأرجح، العناوين، وأوجّه كل الجهد له قبل ما نناقش أي سبب تاني.', o: 'المشكلة اتحلت بسرعة، بس أ. منصور حس إن رأيه اتجاهل.', set: 'ret_focus',
+          s: [S('FO', 1, 1, 'FO1', 'التركيز على ما له التأثير الأكبر'), S('IN', 0, 0)] },
+        { id: 'c', t: 'أطلب من كل واحد يجرّب حل حسب رأيه ونشوف إيه اللي هينفع.', o: 'الكل اتحمس، بس المجهود اتوزع على حاجات كتير.', set: 'ret_each',
+          s: [S('IN', 1, 0.5, 'IN2', 'منح الآخرين ملكية الحل'), S('FO', 0, 0)] },
+        { id: 'd', t: 'أمشي على نصيحة أ. منصور وأستنى يومين وبعدين أراجع.', o: 'احترمنا خبرته وهدّينا الأجواء، بس العملاء بدأوا يشتكوا.', set: 'ret_wait',
+          s: [S('IN', 0, 0), S('FO', -1, 0.5, 'FOn2', 'الانتظار دون فهم الوضع الحالي')] }
+      ] },
+    /* ---------- بالليل ---------- */
+    { id: 's13', ch: 7, type: 'decision', who: 'khaled', time: '٨:٠٠ م', place: 'cafe', comps: ['CU', 'CH'], title: 'مشروع خالد',
+      text: 'قابلت خالد صاحبك في كافيه. عنده مشروع صغير بيبيع حلويات بيتي أونلاين، وبيسألك: يضيف توصيل متأخر لحد ١٢ بالليل ولا لأ؟ الفكرة جديدة ومكلفة، وعملاؤه الحاليين بيحبوا المواعيد الثابتة.',
+      say: [{ w: 'khaled', t: 'يعني أغيّر مواعيدي اللي الناس متعودة عليها وأجرّب؟ أنا مش عارف.' }],
+      options: [
+        { id: 'a', t: 'أقترح عليه يجرّب ليلتين بس ويسأل عملاءه رأيهم قبل ما يقرر.', o: 'رأي العملاء جه متباين، بس التجربة كشفت حاجات ماكنش متوقعها.', set: 'friend_pilot',
+          s: [S('CU', 1, 1, 'CU4', 'طلب إفادة العملاء قبل القرار'), S('CH', 1, 0.5, 'CH3', 'تجربة الفكرة وتقويمها قبل اعتمادها')] },
+        { id: 'b', t: 'أشجعه يطبّقها كلها من دلوقتي، دي فرصة يتميز بيها.', o: 'الخبر انتشر بسرعة، بس بعض عملائه القدام اتضايقوا.', set: 'friend_all',
+          s: [S('CH', 1, 1, 'CH1', 'التحرك نحو الفكرة الجديدة بحماس'), S('CU', 0, 0)] },
+        { id: 'c', t: 'أنصحه يفضل على المواعيد الهادية اللي عملاؤه متعودين عليها.', o: 'عملاؤه القدام ارتاحوا، بس خالد حس إنه فوّت فرصة.', set: 'friend_stay',
+          s: [S('CU', 1, 0.5, 'CU3', 'تقدير ما يفضله العملاء'), S('CH', -1, 0.5, 'CHn4', 'تجنب مخاطرة الفكرة الجديدة')] },
+        { id: 'd', t: 'أقوله يكتب الفكرة بالتفصيل ويعرضها على شريكه وياخدوا القرار مع بعض.', o: 'الفكرة اتعرضت بشكل رسمي، بس القرار اتأجل أسابيع.', set: 'friend_partner',
+          s: [S('CU', 1, 0.5, 'CU5', 'رفع الأفكار الجديدة للمستوى الأعلى'), S('CH', 0, 0)] }
+      ] },
+    { id: 's14', ch: 7, type: 'problem', who: 'hesham', time: '٩:٠٠ م', place: 'phone', comps: ['CO', 'PL'], title: 'رسالة غامضة',
+      text: 'قاعد على الكنبة في البيت، وجاتلك رسالة على واتساب من هشام صاحبك القديم. الرسالة مش واضحة، وموعده بيتعارض مع حاجة عندك الخميس.',
+      say: [{ w: 'hesham', t: 'عامل إيه؟ محتاجك الخميس في موضوع مهم... هقولك لما نتقابل.' }],
+      options: [
+        { id: 'a', t: 'أرد برسالة واضحة: إيه اللي أقدر أعمله وإيه اللي مقدرش، وأقترح ميعاد تاني.', o: 'هشام فهم موقفك، بس كان عايز الخميس بالذات.',
+          s: [S('CO', 1, 1, 'CO1', 'رسالة واضحة ومنفتحة'), S('PL', 0, 0)] },
+        { id: 'b', t: 'أسأله الأول إيه اللي محتاجه بالظبط وإيه اللي مضايقه، وبعدين أحدد موقفي.', o: 'ظهرت حاجات ماكنتش واضحة، بس الرد اتأخر يوم.',
+          s: [S('CO', 1, 0.5, 'CO2', 'الاستماع لوجهة نظر الطرف الآخر'), S('PL', 0, 0)] },
+        { id: 'c', t: 'أغيّر جدولي كله عشان يناسب ميعاده حفاظًا على العلاقة.', o: 'العلاقة اتحافظ عليها، بس جدولك اتلخبط.',
+          s: [S('PL', -1, 0.5, 'PLn1', 'تغيير الخطة دون ربطها بأهدافها'), S('CO', 0, 0)] },
+        { id: 'd', t: 'أرفض باختصار لأن جدولي مش مسموح، وأقفل الموضوع.', o: 'جدولك فضل ثابت، بس هشام بان عليه الضيق.',
+          s: [S('CO', -1, 0.5, 'COn2', 'رد مقتضب لا يوضح الأسباب'), S('PL', 1, 0.5, 'PL3', 'حماية تسلسل الخطة وتوقيتها')] }
+      ] },
+    /* ---------- آخر اليوم ---------- */
+    { id: 's15', ch: 8, type: 'tradeoff', who: 'malak', time: '٩:٤٥ م', place: 'home', comps: ['TW', 'TA'], title: 'لابتوب واحد',
+      text: 'رجعت البيت. ملك وعمر أخوكم الصغير عندهم امتحانات بكرة، وفيه لابتوب واحد بس. ملك محتاجاه للمراجعة النهائية، وعمر محتاجه يحل نماذج.',
+      say: [{ w: 'malak', t: 'أنا محتاجاه ساعتين بس!' }, { w: 'omar', t: 'وأنا كمان، امتحاني بدري!' }],
+      ctx: [{ if: 'family_synced', t: 'ماما سابتلك أكل ومعاه ورقة: «ربنا يخليكم لبعض».' }, { if: 'drove_sister', t: 'ملك لسه بتشكرك على توصيلة الصبح.' }],
+      options: [
+        { id: 'a', t: 'أقسّم وقت اللابتوب بالتساوي وأطلب منهم يتعاونوا ويستعيروا اللي ناقصهم من حد تاني.', o: 'اتعاونوا وظبطوها، بس كل واحد حس إنه كان محتاج وقت أكتر.',
+          s: [S('TW', 1, 1, 'TW1', 'التعاون بين الفرق لإنجاز الهدف المشترك'), S('TA', 0, 0)] },
+        { id: 'b', t: 'أدّي اللابتوب لملك لأن امتحانها أصعب، وأخلي عمر يتعلم من طريقتها في المراجعة.', o: 'ملك راجعت كويس، بس عمر حس إنه مستبعد.',
+          s: [S('TA', 1, 0.5, 'TA5', 'تسريع التعلم عبر الاحتكاك بالأفضل'), S('TW', -1, 0.5, 'TWn4', 'حجب الموارد عن طرف')] },
+        { id: 'c', t: 'أطلب من كل واحد فيهم يشرح للتاني جزء من منهجه، ويتناوبوا على اللابتوب.', o: 'اتبادلوا المهارات، بس خلّصوا متأخر شوية.',
+          s: [S('TA', 1, 0.5, 'TA5', 'مشاركة المهارة لتسريع التعلم'), S('TW', 1, 0.5, 'TW1', 'تبادل المهارات بين الطرفين')] },
+        { id: 'd', t: 'أخلّي اللابتوب معايا وأوزّع الوقت بينهم بنفسي حسب الحاجة كل شوية.', o: 'نظّمتها بدقة، بس بقوا بيعتمدوا عليك في كل حاجة.',
+          s: [S('TW', -1, 0.5, 'TWn1', 'التحكم بالمورد بدل الثقة بالآخرين'), S('TA', 0, 0)] }
+      ] },
+    { id: 's16', ch: 8, type: 'rank', who: 'layla', time: '١١:٠٠ م', place: 'home', comps: ['FO', 'IN'], title: 'قبل ما تنام',
+      text: 'بكرة يوم الإعلان الكبير للجمعة البيضاء في الشركة. الجروب بتاع الفريق صاحي، ومعاك أربع حاجات تقدر تعمل منهم تلاتة بس قبل ما تنام.',
+      say: [{ w: 'layla', t: 'الفريق كله مستني يعرف بكرة هيبقى شكله إيه.' }],
+      options: [
+        { id: 'a', t: 'أراجع معايير الجودة مع كل فريق على الجروب وأتأكد إنهم عارفين إيه اللي هيتتابع بكرة.', o: 'المعايير وضحت، بس القلق فضل عند بعض الفرق.',
+          s: [S('FO', 1, 1, 'FO3', 'ضبط الجودة وإلزام الفرق بالنتائج')] },
+        { id: 'b', t: 'أبعت رسالة صوتية للفريق أقول فيها ليه بكرة مهم لكل واحد فيهم.', o: 'الروح المعنوية ارتفعت، بس المراجعات الأخيرة قلّت.',
+          s: [S('IN', 1, 0.5, 'IN2', 'إشعار الفريق بالملكية والالتزام')] },
+        { id: 'c', t: 'أظبط تفاصيل العرض الصغيرة بنفسي: الألوان والخطوط وترتيب الشرايح.', o: 'العرض شكله بقى مثالي، بس ما لاقيتش وقت للفريق.',
+          s: [S('FO', 0, 0), S('IN', 0, 0)] },
+        { id: 'd', t: 'أوصّل لكل مجموعة إزاي شغلها بيخدم الهدف الكبير، وأسمع رأيها في آخر لحظة.', o: 'المجموعات حسّت بقيمة شغلها، بس بعض التفاصيل فضلت معلّقة.',
+          s: [S('IN', 1, 0.5, 'IN4', 'ربط عمل كل مجموعة بالغاية الكبرى')] }
+      ] }
+  ];
+
+  /* جُمل عامة تظهر بعد كل قرار بغض النظر عن الاختيار (لا تكشف شيئًا عن التقييم) */
+  const filler = [
+    'الموبايل بيرن بإشعار جديد...',
+    'الوقت بيجري واليوم لسه فيه تفاصيل.',
+    'اللي حصل دلوقتي هيأثر على اللي جاي.',
+    'يوم زي أي يوم، بس مليان قرارات.',
+    'الشغل ماشي، وفيه حاجات لسه جاية.',
+    'خد نفس، وكمّل اليوم.'
+  ];
+
+  const people = {
+    mama: { name: 'ماما', role: 'والدتك' },
+    malak: { name: 'ملك', role: 'أختك الصغيرة، طالبة جامعة' },
+    omar: { name: 'عمر', role: 'أخوك الصغير' },
+    hala: { name: 'أ. هالة', role: 'عميلة' },
+    maha: { name: 'أ. مها', role: 'مديرتك' },
+    mansour: { name: 'أ. منصور', role: 'أقدم منسق توصيل' },
+    salma: { name: 'سلمى', role: 'موظفة جديدة في الفريق' },
+    karim: { name: 'كريم', role: 'زميل شاطر في الفريق' },
+    layla: { name: 'ليلى', role: 'خدمة العملاء' },
+    adel: { name: 'أ. عادل', role: 'المالية' },
+    khaled: { name: 'خالد', role: 'صاحبك' },
+    hesham: { name: 'هشام', role: 'صاحب قديم' }
+  };
+
+  const GAME = { competencies, behaviors, notMeans, tips, chapters, scenarios, filler, people };
+  if (typeof module !== 'undefined' && module.exports) module.exports = GAME;
+  else root.GAME = GAME;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* ============================================================
+   محرك التقييم السلوكي المخفي: لا يعرف شيئًا عن الواجهة
+   المدخلات: المحتوى (content.js) + إجابات اللاعب
+   ------------------------------------------------------------
+   مبادئ الحساب (قابلة للمراجعة):
+   1) كل خيار يحمل إشارات (كفاءة، اتجاه، قوة، مرجع من الملف).
+   2) في مواقف الاختيار الواحد: مساهمة الكفاءة = اتجاه × قوة الإشارة.
+   3) في مواقف الترتيب: المتوسط الموزون لمساهمات الخيارات الثلاثة
+      المرتبة بأوزان 3:2:1 (طريقة Borda المعروفة)، فتبقى النتيجة بين -1 و+1
+      مثل بقية المواقف.
+   4) مؤشر الكفاءة = متوسط مساهماتها عبر مواقفها (فتتساوى الكفاءات رغم اختلاف الفرص).
+   5) المؤشر نسبي: يقارن كفاءات اللاعب ببعضها، وليس مستوى مطلقًا.
+   ============================================================ */
+(function (root) {
+  const CFG = {
+    rankWeights: [3, 2, 1],
+    closeGap: 0.08,          // الفارق الذي يعتبر النتائج «متقاربة» لإضافة كفاءة ثالثة
+    thirdNegCount: 3,        // أو وجود دلالتي تطوير فأكثر للكفاءة الثالثة
+    confGap: 0.15,           // فارق عن أول كفاءة غير مختارة يرفع الثقة
+    highSpread: 0.55,        // تباين مرتفع بين المواقف يخفض الثقة (إجابات متناقضة)
+    strengthMin: 0.2         // الحد الأدنى للمؤشر كي تُعدّ الكفاءة نقطة قوة
+  };
+
+  function optVal(opt, c) {
+    let v = 0; const sigs = [];
+    for (const s of opt.s) if (s.c === c) { v += s.d * s.k; if (s.d !== 0) sigs.push(s); }
+    return { v, sigs };
+  }
+  const getOpt = (sc, id) => sc.options.find(o => o.id === id);
+  function hashStr(str) { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return Math.abs(h); }
+  const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+  const std = a => { if (a.length < 2) return 0; const m = mean(a); return Math.sqrt(mean(a.map(x => (x - m) ** 2))); };
+
+  function analyze(content, answers, cfg) {
+    cfg = Object.assign({}, CFG, cfg || {});
+    const W = cfg.rankWeights, WS = W.reduce((a, b) => a + b, 0);
+    const per = {};
+    content.competencies.forEach(c => { per[c.id] = { id: c.id, ev: [] }; });
+    const answered = Object.keys(answers).sort().join(',');
+    const seed = hashStr(JSON.stringify(answers));
+
+    for (const sc of content.scenarios) {
+      const a = answers[sc.id]; if (!a) continue;
+      for (const c of sc.comps) {
+        let val = 0, best = null;
+        if (sc.type === 'rank') {
+          a.rank.forEach((oid, i) => {
+            const o = getOpt(sc, oid); const r = optVal(o, c);
+            val += W[i] * r.v;
+            const m = Math.abs(W[i] * r.v);
+            if (r.sigs.length && (!best || m > best.m)) best = { o, sigs: r.sigs, m, pos: i };
+          });
+          val /= WS;
+          if (!best) { const o = getOpt(sc, a.rank[0]); best = { o, sigs: [], m: 0, pos: 0 }; }
+        } else {
+          const o = getOpt(sc, a.pick); const r = optVal(o, c); val = r.v; best = { o, sigs: r.sigs, m: 0, pos: 0 };
+        }
+        per[c].ev.push({ sid: sc.id, title: sc.title, val, opt: best.o, sigs: best.sigs, pos: best.pos, rank: sc.type === 'rank' });
+      }
+    }
+
+    const ids = Object.keys(per);
+    ids.forEach(c => {
+      const p = per[c], vals = p.ev.map(e => e.val);
+      p.n = vals.length;
+      p.idx = mean(vals);
+      p.spread = std(vals);
+      p.posEv = p.ev.filter(e => e.val > 0);
+      p.negEv = p.ev.filter(e => e.val < 0);
+      p.lowCount = p.ev.filter(e => e.val <= 0).length;
+      p.contradictory = p.spread >= cfg.highSpread;
+    });
+
+    // أولويات التطوير: الأقل مؤشرًا (نسبيًا). كسر التعادل: دلائل تطوير أكثر ثم تدوير ثابت من إجابات اللاعب نفسها (لا عشوائية)
+    const order = ids.slice().sort((x, y) => {
+      const a = per[x], b = per[y];
+      if (Math.abs(a.idx - b.idx) > 1e-9) return a.idx - b.idx;
+      if (a.negEv.length !== b.negEv.length) return b.negEv.length - a.negEv.length;
+      return ((ids.indexOf(x) * 7919 + seed) % 97) - ((ids.indexOf(y) * 7919 + seed) % 97);
+    });
+    let k = 2;
+    const third = per[order[2]];
+    if (third && (third.idx - per[order[1]].idx <= cfg.closeGap || third.negEv.length >= cfg.thirdNegCount)) k = 3;
+    const sel = order.slice(0, k);
+    const nextOut = per[order[k]];
+
+    const priorities = sel.map(c => {
+      const p = per[c];
+      let score = 0;
+      score += p.lowCount >= 3 ? 2 : p.lowCount === 2 ? 1 : 0;
+      score += (nextOut.idx - p.idx) >= cfg.confGap ? 1 : 0;
+      score -= p.contradictory ? 1 : 0;
+      const confidence = score >= 3 ? 'high' : score >= 1 ? 'medium' : 'low';
+      const potential = p.negEv.length === 0; // لا دليل تطوير قوي: «فرصة نمو محتملة»
+      return { id: c, idx: p.idx, confidence, potential, contradictory: p.contradictory, lowCount: p.lowCount, n: p.n };
+    });
+
+    const strengthOrder = ids.filter(c => !sel.includes(c) && per[c].posEv.length >= 1 && per[c].idx >= cfg.strengthMin)
+      .sort((x, y) => per[y].idx - per[x].idx);
+    const strengths = strengthOrder.slice(0, 3).map(c => ({ id: c, idx: per[c].idx }));
+
+    return { per, order, priorities, strengths, answered: Object.keys(answers).length, cfg };
+  }
+
+  /* ---- أدوات المحاكاة (للاختبار ولوحة المصمّمة) ---- */
+  function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  function simulate(content, policy, rng) {
+    const answers = {};
+    content.scenarios.forEach((sc, i) => {
+      if (sc.type === 'rank') {
+        const scored = sc.options.map(o => ({ id: o.id, s: policy(sc, o, i, rng) }));
+        scored.sort((a, b) => b.s - a.s);
+        answers[sc.id] = { rank: scored.slice(0, 3).map(x => x.id) };
+      } else {
+        let best = null;
+        sc.options.forEach(o => { const s = policy(sc, o, i, rng); if (!best || s > best.s) best = { id: o.id, s }; });
+        answers[sc.id] = { pick: best.id };
+      }
+    });
+    return answers;
+  }
+  const randomPolicy = (sc, o, i, rng) => rng();
+  function weightedPolicy(w, noise) {
+    return (sc, o, i, rng) => {
+      let s = 0; for (const c of sc.comps) s += (w[c] === undefined ? 0 : w[c]) * optVal(o, c).v;
+      return s + noise * rng();
+    };
+  }
+
+  const ENGINE = { CFG, analyze, simulate, randomPolicy, weightedPolicy, mulberry, optVal };
+  if (typeof module !== 'undefined' && module.exports) module.exports = ENGINE;
+  else root.ENGINE = ENGINE;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* واجهة اللعبة «يوم مختلف». لا تحتوي أي أسئلة أو أوزان: كلها في content.js، والحساب في engine.js */
+(function () {
+  const G = window.GAME, E = window.ENGINE;
+  const $app = document.getElementById('app');
+  const AR = ['أ', 'ب', 'ج', 'د'], NUM = ['١', '٢', '٣'];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const comp = id => G.competencies.find(c => c.id === id);
+  const scOf = i => G.scenarios[i];
+  const chOf = n => G.chapters.find(c => c.n === n);
+
+  /* ---------- الشخصيات: رسوم أصلية بملامح وملابس معاصرة ---------- */
+  const INK = '#2A130F';
+  const eyes = `<circle cx="51" cy="51" r="2.5" fill="${INK}"/><circle cx="69" cy="51" r="2.5" fill="${INK}"/><path d="M45 44q6-4 11 0M64 44q5-4 11 0" stroke="${INK}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  const smile = `<path d="M52 63q8 6 16 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  function person(o) {
+    const hairC = o.hair || INK, hs = o.hs || 'short';
+    let back = '', front = '';
+    if (hs === 'long') { back = `<path d="M32 52q0-32 28-32t28 32v42q-8 6-14 0v-36h-28v36q-6 6-14 0z" fill="${hairC}"/>`; front = `<path d="M36 47q4-21 24-21t24 21q-12-9-24-9t-24 9z" fill="${hairC}"/>`; }
+    else if (hs === 'bob') { back = `<path d="M32 50q0-30 28-30t28 30v24q-8 6-14 0v-24h-28v24q-6 6-14 0z" fill="${hairC}"/>`; front = `<path d="M36 46q4-20 24-20t24 20q-12-8-24-8t-24 8z" fill="${hairC}"/>`; }
+    else if (hs === 'curly') front = `<g fill="${hairC}"><circle cx="42" cy="36" r="11"/><circle cx="60" cy="29" r="12"/><circle cx="78" cy="36" r="11"/><circle cx="36" cy="48" r="8"/><circle cx="84" cy="48" r="8"/></g>`;
+    else if (hs === 'gray') front = `<path d="M35 58q-3-14 3-22 3 8 3 22z" fill="${hairC}"/><path d="M85 58q3-14-3-22-3 8-3 22z" fill="${hairC}"/><path d="M42 33q18-10 36 0q-18-4-36 0z" fill="${hairC}"/>`;
+    else if (hs === 'short') front = `<path d="M35 51q0-29 25-29t25 29q-7-13-25-13t-25 13z" fill="${hairC}"/>`;
+    const torso = `<path d="M24 150v-36q0-28 36-28t36 28v36z" fill="${o.top}"/>` + (o.collar === 'shirt' ? `<path d="M46 88l14 18 14-18z" fill="#fff"/>` : '') + (o.tie ? `<path d="M57 102h6l3 28-6 6-6-6z" fill="${o.tie}"/>` : '') + (o.lan ? `<path d="M50 88l10 32 10-32" stroke="#DA291C" stroke-width="3" fill="none"/><rect x="54" y="118" width="12" height="16" rx="2" fill="#fff"/>` : '');
+    let face;
+    if (o.hij) face = torso + `<path d="M60 20c-26 0-36 20-36 40 0 14 3 26-2 44l76 0c-5-18-2-30-2-44 0-20-10-40-36-40z" fill="${o.hij}"/><ellipse cx="60" cy="55" rx="20" ry="24" fill="${o.skin}"/>` + eyes + smile;
+    else face = back + torso + `<rect x="52" y="74" width="16" height="16" fill="${o.skin}"/><circle cx="60" cy="52" r="25" fill="${o.skin}"/>` + eyes + smile + front;
+    if (o.beard) face += `<path d="M40 60q2 26 20 26t20-26q-4 9-20 9t-20-9z" fill="${hairC}"/>` + smile;
+    if (o.mus) face += `<path d="M49 60q11-5 22 0q-11 4-22 0z" fill="${hairC}"/>`;
+    if (o.gl) face += `<g fill="none" stroke="${INK}" stroke-width="2.2"><circle cx="51" cy="51" r="7.5"/><circle cx="69" cy="51" r="7.5"/><path d="M58.5 51h3"/></g>`;
+    return face;
+  }
+  const P = {
+    mama: () => person({ skin: '#D9A77C', top: '#8C6A5D', hij: '#7A8FA6' }),
+    malak: () => person({ skin: '#E2B089', top: '#3F5F8A', hij: '#D98BA3' }),
+    omar: () => person({ skin: '#C98B5E', top: '#DA291C', hair: '#1B0E0B', hs: 'short' }),
+    hala: () => person({ skin: '#E2B089', top: '#B5483A', hij: '#3B2F4A' }),
+    maha: () => person({ skin: '#E2B089', top: '#243B55', collar: 'shirt', hair: '#5A3A2A', hs: 'bob', gl: true }),
+    mansour: () => person({ skin: '#B5764B', top: '#8FB1CF', collar: 'shirt', hair: '#D9D3C7', hs: 'gray', mus: true }),
+    salma: () => person({ skin: '#C98B5E', top: '#2F7D6D', hij: '#C8A27A' }),
+    karim: () => person({ skin: '#D6A074', top: '#6B7280', hair: '#1B0E0B', hs: 'short', beard: true }),
+    layla: () => person({ skin: '#E2B089', top: '#F3E6D8', hair: '#2A130F', hs: 'long', lan: true }),
+    adel: () => person({ skin: '#D9A77C', top: '#3A3F4B', collar: 'shirt', tie: '#DA291C', hair: '#8A8A8A', hs: 'gray', gl: true }),
+    khaled: () => person({ skin: '#C98B5E', top: '#5B7B5B', hair: '#1B0E0B', hs: 'curly' }),
+    hesham: () => person({ skin: '#D6A074', top: '#1F2430', hair: '#2A130F', hs: 'short' })
+  };
+  const avatar = (key) => `<svg class="av" viewBox="0 0 120 150" role="img" aria-label="${esc((G.people[key] || {}).name || '')}">${(P[key] || P.mama)()}</svg>`;
+  const face = (key) => `<svg class="face" viewBox="14 10 92 92" aria-hidden="true"><rect x="0" y="0" width="120" height="150" fill="#FFE59A"/>${(P[key] || P.mama)()}</svg>`;
+
+  /* ---------- الأماكن ---------- */
+  const SKY = { 1: '#FFD9A0', 2: '#BFE3F7', 3: '#9AD4F5', 4: '#9AD4F5', 5: '#F7C98B', 6: '#F2A56B', 7: '#2D3561', 8: '#1D2347' };
+  function placeSVG(place, sky) {
+    const win = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${sky}" stroke="#fff" stroke-width="5"/><path d="M${x + w / 2} ${y}v${h}M${x} ${y + h / 2}h${w}" stroke="#fff" stroke-width="3"/>`;
+    const L = {
+      home: `<rect width="400" height="150" fill="#E8D9C3"/><rect y="118" width="400" height="32" fill="#B58B63"/>${win(40, 20, 90, 72)}<ellipse cx="200" cy="136" rx="110" ry="10" fill="#8E1B12" opacity=".35"/><rect x="236" y="68" width="140" height="52" rx="14" fill="#C0392B"/><rect x="226" y="84" width="24" height="40" rx="9" fill="#A93226"/><rect x="362" y="84" width="24" height="40" rx="9" fill="#A93226"/><rect x="196" y="62" width="4" height="58" fill="#5E3F38"/><path d="M184 62h28l-6-22h-16z" fill="#FFC72C"/>`,
+      street: `<rect width="400" height="150" fill="${sky}"/><g fill="#8793A8"><rect x="10" y="30" width="60" height="90"/><rect x="82" y="50" width="48" height="70"/><rect x="250" y="24" width="70" height="96"/><rect x="332" y="56" width="56" height="64"/></g><g fill="#FFE59A" opacity=".8"><rect x="22" y="44" width="10" height="10"/><rect x="44" y="44" width="10" height="10"/><rect x="22" y="68" width="10" height="10"/><rect x="266" y="40" width="10" height="10"/><rect x="290" y="40" width="10" height="10"/><rect x="266" y="66" width="10" height="10"/></g><rect y="112" width="400" height="38" fill="#4A4F5C"/><path d="M0 132h400" stroke="#FFE59A" stroke-width="3" stroke-dasharray="22 16"/><rect x="40" y="96" width="78" height="26" rx="9" fill="#FFC72C"/><rect x="54" y="84" width="46" height="18" rx="7" fill="#FFE59A"/><circle cx="58" cy="124" r="8" fill="#230C0A"/><circle cx="102" cy="124" r="8" fill="#230C0A"/><rect x="196" y="54" width="4" height="66" fill="#3A3F4B"/><rect x="186" y="50" width="24" height="8" rx="3" fill="#3A3F4B"/>`,
+      office: `<rect width="400" height="150" fill="#DDE6EE"/><rect y="120" width="400" height="30" fill="#A9B4C2"/>${win(36, 18, 120, 76)}<rect x="212" y="84" width="150" height="10" rx="3" fill="#8B5E3C"/><rect x="224" y="94" width="8" height="30" fill="#6B4A31"/><rect x="342" y="94" width="8" height="30" fill="#6B4A31"/><rect x="262" y="48" width="56" height="36" rx="3" fill="#2A3B4D"/><rect x="266" y="52" width="48" height="28" fill="#6FB1E8"/><rect x="286" y="84" width="8" height="6" fill="#2A3B4D"/><path d="M178 120q-8-24 0-36q8 12 0 36zM190 120q4-22 14-28q-2 18-14 28z" fill="#3E8E5A"/><rect x="176" y="118" width="20" height="12" rx="3" fill="#8E1B12"/>`,
+      cafe: `<rect width="400" height="150" fill="#7A4A36"/><rect y="118" width="400" height="32" fill="#4A2C20"/><rect x="30" y="24" width="110" height="60" rx="5" fill="#2A1A14"/><path d="M42 40h60M42 54h80M42 68h46" stroke="#FFE59A" stroke-width="3" stroke-linecap="round" opacity=".85"/><g fill="#FFC72C"><path d="M200 0v30"/><circle cx="200" cy="38" r="9"/><path d="M260 0v22" stroke="#FFC72C"/><circle cx="260" cy="30" r="9"/><path d="M320 0v36" stroke="#FFC72C"/><circle cx="320" cy="44" r="9"/></g><ellipse cx="250" cy="100" rx="70" ry="8" fill="#E8D9C3"/><rect x="246" y="104" width="8" height="22" fill="#E8D9C3"/><rect x="228" y="82" width="22" height="18" rx="4" fill="#fff"/><path d="M250 86q8 0 8 6t-8 6" stroke="#fff" stroke-width="3" fill="none"/><path d="M234 74q-4 -6 0 -10M242 74q-4 -6 0 -10" stroke="#FFE59A" stroke-width="2" fill="none"/>`,
+      meeting: `<rect width="400" height="150" fill="#E4E8EE"/><rect y="124" width="400" height="26" fill="#9AA4B2"/><rect x="40" y="18" width="150" height="82" rx="4" fill="#fff" stroke="#8793A8" stroke-width="4"/><rect x="60" y="64" width="18" height="28" fill="#DA291C"/><rect x="88" y="48" width="18" height="44" fill="#FFC72C"/><rect x="116" y="36" width="18" height="56" fill="#DA291C"/><rect x="144" y="54" width="18" height="38" fill="#FFC72C"/><rect x="20" y="104" width="360" height="14" rx="6" fill="#8B5E3C"/><circle cx="60" cy="132" r="10" fill="#4A4F5C"/><circle cx="130" cy="132" r="10" fill="#4A4F5C"/><circle cx="330" cy="132" r="10" fill="#4A4F5C"/>`,
+      phone: `<rect width="400" height="150" fill="#2A2F4A"/><rect y="118" width="400" height="32" fill="#3B3450"/><rect x="236" y="68" width="140" height="52" rx="14" fill="#6B3A5E"/><rect x="226" y="84" width="24" height="40" rx="9" fill="#58304D"/><rect x="362" y="84" width="24" height="40" rx="9" fill="#58304D"/><circle cx="90" cy="60" r="44" fill="#FFC72C" opacity=".12"/><rect x="70" y="30" width="40" height="70" rx="8" fill="#12141F" stroke="#FFC72C" stroke-width="3"/><rect x="76" y="40" width="28" height="12" rx="4" fill="#fff"/><rect x="76" y="56" width="22" height="10" rx="4" fill="#DA291C"/><rect x="76" y="70" width="28" height="10" rx="4" fill="#fff"/>`
+    };
+    return `<svg class="bg" viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${L[place] || L.home}</svg>`;
+  }
+  const flagIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2v20" stroke="#8E1B12" stroke-width="2.4" stroke-linecap="round"/><path d="M5 4h13l-3 4 3 4H5z" fill="#FFC72C" stroke="#8E1B12" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  const rocketIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c4 3 5 8 3 14H9C7 10 8 5 12 2z" fill="#DA291C"/><circle cx="12" cy="9" r="2" fill="#FFC72C"/><path d="M9 16l-3 4 4-1zM15 16l3 4-4-1z" fill="#FFC72C"/></svg>';
+  const sunMark = '<svg class="print-mark" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="26" fill="#FFC72C"/><g stroke="#FFC72C" stroke-width="7" stroke-linecap="round"><path d="M60 8v14M60 98v14M8 60h14M98 60h14M23 23l10 10M87 87l10 10M97 23l-10 10M33 87l-10 10"/></g></svg>';
+
+  /* ---------- الحالة ---------- */
+  let S;
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function fresh(keepName) {
+    S = { screen: 'start', name: keepName || '', idx: 0, answers: {}, order: {}, pick: null, rank: [], result: null, report: null, flags: {} };
+    G.scenarios.forEach(sc => { S.order[sc.id] = shuffle(sc.options.map(o => o.id)); });
+  }
+  fresh();
+
+  function go(screen) { S.screen = screen; render(); window.scrollTo(0, 0); }
+
+  /* ---------- الشاشات ---------- */
+  function hud() {
+    const sc = scOf(S.idx), n = sc.ch, ch = chOf(n);
+    let t = '';
+    for (let i = 1; i <= 8; i++) {
+      const cls = i < n ? 'done' : i === n ? 'now' : '';
+      t += `<span class="stop ${cls}"></span>`;
+      if (i < 8) t += `<span class="seg ${i < n ? 'done' : ''}"></span>`;
+    }
+    return `<div class="hud no-print" role="progressbar" aria-valuemin="1" aria-valuemax="8" aria-valuenow="${n}"><div class="trail">${t}</div><div class="cap"><span>${esc(ch.name)} · ${esc(sc.time || ch.time)}</span><b>المحطة ${n} من 8</b></div></div>`;
+  }
+
+  function startScreen() {
+    return `<section class="screen hero">
+      <div class="orb" aria-hidden="true"></div>
+      <div class="kicker">لعبة قرارات من يوم عادي</div>
+      <h1>يوم مختلف</h1>
+      <div class="en">A Different Day</div>
+      <p class="lead">يوم عادي في القاهرة، من أول الصبح لآخر الليل: بيت وشغل وكافيه وطريق. كل موقف قرارك فيه، وكل قرار بيأثر على اللي بعده.</p>
+      <div class="cast">${['mama', 'karim', 'salma', 'maha'].map(avatar).join('')}</div>
+      <button class="btn red big" data-act="how">يلا نبدأ اليوم</button>
+      <p class="hint">حوالي ١٥ دقيقة · مناسبة للموبايل</p>
+    </section>`;
+  }
+  function howScreen() {
+    return `<section class="screen">
+      <h2 style="font-size:32px;color:var(--yellow)">قبل ما يبدأ يومك</h2>
+      <ol class="steps">
+        <li><b>١</b><span>يوم واحد من الصبح لآخر الليل، فيه ١٦ موقف في البيت والشغل والكافيه والطريق.</span></li>
+        <li><b>٢</b><span>مفيش إجابة صح وإجابة غلط. كل قرار له مكسب وتكلفة، فاختار اللي بيشبهك فعلًا.</span></li>
+        <li><b>٣</b><span>قراراتك بتأثر على اللي بعدها، وهتشوف أثرها في أحداث اليوم.</span></li>
+        <li><b>٤</b><span>في بعض المواقف هترتّب ٣ حاجات من الأول للتالت حسب هتبدأ بإيه.</span></li>
+        <li><b>٥</b><span>في الآخر تظهر «اكتشف بصمتك القيادية»: نقاط قوتك، وكفاءتين أو تلاتة تستاهل تركيز أكتر.</span></li>
+      </ol>
+      <div class="notice"><b>عن بياناتك:</b> اللعبة بتستخدم قراراتك عشان تدّيك مؤشرات عن أسلوبك القيادي وفرص تطويرك. مفيش أي بيانات شخصية بتتجمع، ومفيش حاجة بتتبعت لأي سيرفر، وإجاباتك بتفضل في الصفحة دي طول الجلسة بس. اللعبة أداة استكشافية للتطوير، مش تقييم نفسي معتمد، ومش أساس لقرارات الترقية أو الأداء.</div>
+      <button class="btn primary big" data-act="name">تمام، كمّل</button>
+    </section>`;
+  }
+  function nameScreen() {
+    return `<section class="screen">
+      <h2 style="font-size:30px;color:var(--yellow)">نناديك إيه؟</h2>
+      <div class="field"><label for="nm">اسمك (اختياري)</label><input id="nm" type="text" maxlength="30" autocomplete="off" placeholder="هيظهر في التقرير بس" value="${esc(S.name)}"></div>
+      <button class="btn red big" data-act="begin">ابدأ اليوم</button>
+      <button class="btn ghost" data-act="begin" data-skip="1">عدّي الخطوة دي</button>
+    </section>`;
+  }
+  function chapterScreen() {
+    const ch = chOf(scOf(S.idx).ch);
+    return hud() + `<section class="screen chapter">
+      <div class="clock">${esc(ch.time)}</div><div class="num">المحطة ${ch.n}</div><h2>${esc(ch.name)}</h2><p>${esc(ch.intro)}</p>
+      <button class="btn primary big" data-act="next">يلا</button></section>`;
+  }
+  function optsHTML(sc) {
+    return S.order[sc.id].map((oid, i) => {
+      const o = sc.options.find(x => x.id === oid);
+      let sel = false, mk = AR[i];
+      if (sc.type === 'rank') { const k = S.rank.indexOf(oid); sel = k >= 0; mk = sel ? NUM[k] : ''; }
+      else { sel = S.pick === oid; if (sel) mk = '✓'; }
+      return `<button class="opt${sel ? ' sel' : ''}" data-act="opt" data-id="${oid}" aria-pressed="${sel}"><span class="mark">${mk}</span><span>${esc(o.t)}</span></button>`;
+    }).join('');
+  }
+  function sceneScreen() {
+    const sc = scOf(S.idx), p = G.people[sc.who];
+    const ready = sc.type === 'rank' ? S.rank.length === 3 : S.pick !== null;
+    const ctx = (sc.ctx || []).filter(c => S.flags[c.if]).slice(0, 2);
+    const say = (sc.say || []).map((m, i) => { const w = G.people[m.w] || p; return `<div class="msg" style="animation-delay:${.25 + i * .5}s">${face(m.w)}<div class="mb"><b>${esc(w.name)}</b><span>${esc(m.t)}</span></div></div>`; }).join('');
+    return hud() + `<section class="screen">
+      <div class="scene">${placeSVG(sc.place, SKY[sc.ch])}<span class="tchip">${esc(sc.time || '')}</span>${avatar(sc.who)}<div class="who"><b>${esc(p.name)}</b><span>${esc(p.role)}</span></div></div>
+      ${ctx.length ? `<div class="ctx"><b>من اللي حصل قبل كده</b>${ctx.map(c => `<span>${esc(c.t)}</span>`).join('')}</div>` : ''}
+      <div class="bubble"><h2>${esc(sc.title)}</h2><p>${esc(sc.text)}</p></div>
+      ${say ? `<div class="chat">${say}</div>` : ''}
+      ${sc.type === 'rank' ? '<span class="tag">اضغط على ٣ قرارات بالترتيب: الأول ثم التاني ثم التالت</span>' : ''}
+      <div class="opts">${optsHTML(sc)}</div>
+      <button class="btn red big" data-act="confirm" ${ready ? '' : 'disabled'}>${sc.type === 'rank' ? 'أعتمد الترتيب ده' : 'أعتمد قراري'}</button>
+    </section>`;
+  }
+  function outcomeScreen() {
+    const sc = scOf(S.idx), a = S.answers[sc.id];
+    const first = sc.options.find(o => o.id === (a.rank ? a.rank[0] : a.pick));
+    const note = G.filler[S.idx % G.filler.length];
+    let order = '';
+    if (a.rank) order = `<ol class="order">${a.rank.map((id, i) => `<li><b>${NUM[i]}</b><span>${esc(sc.options.find(o => o.id === id).t)}</span></li>`).join('')}</ol>`;
+    const last = S.idx === G.scenarios.length - 1;
+    return hud() + `<section class="screen">
+      <div class="notif"><i aria-hidden="true"></i><div><b>${esc(sc.time || '')}</b><span>${esc(note)}</span></div></div>
+      ${a.rank ? `<div class="card"><div class="lbl">ترتيبك</div>${order}</div>` : ''}
+      <div class="card"><div class="lbl">اللي حصل بعد كده</div><p>${esc(first.o)}</p></div>
+      <button class="btn primary big" data-act="cont">${last ? 'اكتشف بصمتك القيادية' : 'كمّل اليوم'}</button>
+    </section>`;
+  }
+  function loadingScreen() {
+    return `<section class="screen loading"><div class="phases"><i></i><i></i><i></i><i></i><i></i></div>
+      <h2 style="font-size:30px;color:var(--yellow)">اليوم قرّب يخلص</h2><p class="lead">بنجمّع قصة يومك ونقرأ اللي بتقوله قراراتك...</p></section>`;
+  }
+
+  /* ---------- التقرير الشخصي ---------- */
+  const behKeys = id => Object.keys(G.behaviors).filter(k => new RegExp('^' + id + '\\d').test(k));
+  function buildReport(res, name) {
+    const pris = res.priorities.map(p => {
+      const c = comp(p.id), per = res.per[p.id];
+      const evs = per.ev.slice().sort((a, b) => a.val - b.val);
+      const examples = evs.slice(0, 2).map(ev => {
+        const note = (ev.sigs.find(s => s.d <= 0) || ev.sigs[0] || {}).n;
+        const line = ev.rank ? `في «${ev.title}» جاء في ترتيبك (المرتبة ${NUM[ev.pos]}): «${ev.opt.t}»` : `في «${ev.title}» اخترت: «${ev.opt.t}»`;
+        return { line, note: note ? `ما يعكسه ذلك: ${note}` : '' };
+      });
+      const shown = new Set();
+      per.ev.forEach(ev => { if (ev.val > 0) ev.sigs.forEach(s => { if (s.d > 0) shown.add(s.r); }); });
+      const measured = []; G.scenarios.forEach(sc => sc.options.forEach(o => o.s.forEach(s => { if (s.c === p.id && s.d > 0 && !measured.includes(s.r)) measured.push(s.r); })));
+      const cand = measured.filter(r => !shown.has(r)).concat(behKeys(p.id).filter(r => !shown.has(r) && !measured.includes(r)));
+      const improve = cand.slice(0, 3);
+      const why = p.potential
+        ? `لم تظهر هذه الكفاءة بوضوح في أغلب قراراتك داخل اليوم (${p.lowCount} من ${p.n} مواقف). هذا لا يعني ضعفًا، فقد فضّلت أولويات أخرى كانت مناسبة لسياقها، ونراها فرصة نمو محتملة.`
+        : `ظهرت في ${p.lowCount} من ${p.n} مواقف قرارات تميل إلى أسلوب مختلف عمّا تصفه هذه الكفاءة، لذلك تبدو فرصة جيدة لتعزيزها.`;
+      const confTxt = { high: 'مرتفع: الإشارات متسقة وواضحة نسبيًا.', medium: 'متوسط: الأدلة كافية لاقتراح الأولوية، وستتضح الصورة أكثر بالممارسة.', low: 'منخفض: الأدلة متقاربة، فاعتبرها اتجاهًا أوليًا للنقاش وليس حكمًا.' }[p.confidence];
+      return { id: p.id, name: c.name, def: c.means[0], chip: p.potential ? 'فرصة نمو محتملة' : 'أولوية تطوير', why, contra: p.contradictory ? 'اختلف أسلوبك من موقف لآخر، وهذا طبيعي حين تتغير السياقات.' : '', conf: confTxt, examples, improve: improve.map(r => G.behaviors[r]), tip: cand.length ? G.tips[cand[0]] : G.tips[behKeys(p.id)[0]] };
+    });
+    const strs = res.strengths.map(s => {
+      const c = comp(s.id), per = res.per[s.id];
+      const best = per.ev.slice().sort((a, b) => b.val - a.val)[0];
+      const sig = best.sigs.find(x => x.d > 0);
+      return { name: c.name, line: best.rank ? `في «${best.title}» جاء في ترتيبك: «${best.opt.t}»` : `في «${best.title}» اخترت: «${best.opt.t}»`, beh: sig ? G.behaviors[sig.r] : '' };
+    });
+    const names = strs.map(s => '«' + s.name + '»');
+    const summary = (name ? name + '، ' : '') + (names.length ? `ظهر في قراراتك حضور لافت في ${names.slice(0, 2).join(' و')}. ` : '') +
+      `وبحسب اختياراتك، أقرب فرص النمو هي: ${pris.map(p => '«' + p.name + '»').join(' و')}.`;
+    return { name, summary, pris, strs, date: new Date().toLocaleDateString('ar-EG') };
+  }
+
+  function reportScreen() {
+    const R = S.report;
+    return `<section class="screen report">
+      <div class="r-head">${sunMark}
+        <div class="date">${esc(R.date)}</div><h1>اكتشف بصمتك القيادية</h1>
+        <p class="r-sum">${esc(R.summary)}</p></div>
+      <div class="sec-t">${flagIcon}<span>نقاط قوتك</span></div>
+      ${R.strs.map(s => `<div class="rc"><h3>${esc(s.name)}</h3>${s.beh ? `<div><h4>سلوك ظهر في قراراتك</h4><p>${esc(s.beh)}</p></div>` : ''}<div class="ex">${esc(s.line)}</div></div>`).join('')}
+      <div class="sec-t">${rocketIcon}<span>فرصتك القادمة للتطور</span></div>
+      ${R.pris.map(p => `<div class="rc pri">
+        <span class="chip ${p.chip.startsWith('فرصة') ? 'soft' : ''}">${esc(p.chip)}</span>
+        <h3>${esc(p.name)}</h3>
+        <p class="def">${esc(p.def)}</p>
+        <div><h4>لماذا ظهرت هنا؟</h4><p>${esc(p.why)} ${esc(p.contra)}</p></div>
+        <div><h4>من قراراتك في اليوم</h4>${p.examples.map(x => `<div class="ex">${esc(x.line)}${x.note ? `<small>${esc(x.note)}</small>` : ''}</div>`).join('')}</div>
+        <div><h4>سلوكيات يمكنك تحسينها</h4><ul>${p.improve.map(b => `<li>${esc(b)}</li>`).join('')}</ul></div>
+        <div class="tip"><h4>اقتراح عملي في بيئة العمل</h4><p>${esc(p.tip)}</p></div>
+        <p class="def" style="font-size:14.5px">مستوى الثقة: ${esc(p.conf)}</p>
+      </div>`).join('')}
+      <div class="read"><h3>كيف تقرأ هذا التقرير؟</h3><ul>
+        <li>هذه النتيجة نسبية: تقارن كفاءاتك ببعضها بحسب قراراتك في أحداث هذا اليوم، وليست مستوى مطلقًا.</li>
+        <li>اللعبة أداة استكشافية للتطوير، وليست تقييمًا نفسيًا معتمدًا ولا أساسًا لقرارات الترقية أو الأداء.</li>
+        <li>قد تتغير النتيجة إذا أعدت اللعب، لأن القرارات تتأثر بالسياق. ناقشها مع مديرك أو زميل تثق به.</li></ul></div>
+      <div class="actions no-print">
+        <button class="btn red big" data-act="copy">نسخ نص التقرير</button>
+        <button class="btn ghost" data-act="restart">العب من جديد</button>
+      </div>
+      <div id="copybox"></div>
+    </section>`;
+  }
+  function reportText(R) {
+    const L = ['اكتشف بصمتك القيادية — ' + R.date, '', R.summary, '', 'نقاط قوتك'];
+    R.strs.forEach(s => { L.push('- ' + s.name); if (s.beh) L.push('  سلوك ظهر في قراراتك: ' + s.beh); });
+    L.push('', 'فرصتك القادمة للتطور');
+    R.pris.forEach((p, i) => {
+      L.push('', (i + 1) + '. ' + p.name + ' (' + p.chip + ')', '   ' + p.def, '   لماذا ظهرت: ' + p.why + ' ' + p.contra);
+      p.examples.forEach(x => L.push('   - ' + x.line));
+      L.push('   سلوكيات يمكنك تحسينها:'); p.improve.forEach(b => L.push('     • ' + b));
+      L.push('   اقتراح عملي: ' + p.tip, '   مستوى الثقة: ' + p.conf);
+    });
+    L.push('', 'ملاحظة: النتيجة نسبية، واللعبة أداة استكشافية للتطوير وليست تقييمًا نفسيًا معتمدًا ولا أساسًا لقرارات الترقية أو الأداء.');
+    return L.join('\n');
+  }
+
+  /* ---------- لوحة المصمّمة (#designer) ---------- */
+  const DIR = { 1: '＋', '-1': '−', 0: '٠' };
+  function simAll(n) {
+    const rng = E.mulberry(2024), ids = G.competencies.map(c => c.id), pri = {}, str = {};
+    ids.forEach(c => { pri[c] = 0; str[c] = 0; });
+    for (let i = 0; i < n; i++) { const r = E.analyze(G, E.simulate(G, E.randomPolicy, rng)); r.priorities.forEach(p => pri[p.id]++); r.strengths.forEach(s => str[s.id]++); }
+    return { pri, str, n };
+  }
+  function designerScreen() {
+    const cnt = {}; G.competencies.forEach(c => cnt[c.id] = 0); G.scenarios.forEach(sc => sc.comps.forEach(c => cnt[c]++));
+    const sim = S.sim;
+    const last = S.result;
+    const matrix = G.scenarios.map(sc => `<details class="rc" style="padding:12px 14px"><summary><b>${sc.id.slice(1)}. ${esc(sc.title)}</b> · ${esc(sc.type)} · ${sc.comps.map(c => esc(comp(c).name)).join(' + ')}</summary>
+      ${sc.options.map(o => `<div class="ex" style="margin-top:8px"><b>${o.id}.</b> ${esc(o.t)}<small>النتيجة السردية: ${esc(o.o)}</small>
+        ${o.s.length ? o.s.map(s => `<small>${esc(comp(s.c).name)} | ${DIR[s.d]} | قوة ${s.k}${s.r ? ' | ' + s.r + ': ' + esc(G.behaviors[s.r] || G.notMeans[s.r] || '') : ''}${s.n ? ' | ' + esc(s.n) : ''}</small>`).join('') : ''}</div>`).join('')}</details>`).join('');
+    return `<section class="screen report">
+      <div class="r-head"><h1>لوحة المصمّمة</h1><p class="r-sum">تعرض هذه الصفحة طريقة احتساب النتائج كاملة لمراجعتها. الرابط ينتهي بـ #designer ولا يحميه رمز، فشاركيه مع من تثقين بهم فقط.</p></div>
+      <div class="rc"><h3>إعدادات المحرك (engine.js)</h3><div class="ex">${Object.entries(E.CFG).map(([k, v]) => `${esc(k)} = ${Array.isArray(v) ? v.join(':') : v}`).join('<br>')}</div></div>
+      <div class="rc"><h3>توازن فرص القياس</h3><div class="ex">${G.competencies.map(c => `${esc(c.name)}: ${cnt[c.id]} مواقف`).join('<br>')}</div></div>
+      <div class="rc"><h3>محاكاة لاعبين عشوائيين</h3><button class="btn primary" data-act="sim">شغّل ٣٠٠٠ لاعب</button>
+        ${sim ? `<div class="ex">${G.competencies.map(c => `${esc(c.name)}: أولوية تطوير ${(100 * sim.pri[c.id] / sim.n).toFixed(1)}٪ · نقطة قوة ${(100 * sim.str[c.id] / sim.n).toFixed(1)}٪`).join('<br>')}</div>` : ''}</div>
+      <div class="rc"><h3>آخر جلسة لعب في هذه الصفحة</h3>${last ? `<div class="ex">${G.competencies.map(c => { const p = last.per[c.id]; return `${esc(c.name)}: المؤشر ${p.idx.toFixed(2)} · ${p.n} مواقف · تباين ${p.spread.toFixed(2)}`; }).join('<br>')}<small>الأولويات: ${last.priorities.map(p => esc(comp(p.id).name) + ' (' + p.confidence + ')').join('، ')}</small></div>` : '<p class="def">لم تُلعب جلسة بعد.</p>'}</div>
+      <div class="sec-t"><span>مصفوفة الربط الكاملة</span></div>
+      <p class="def" style="margin:0">رمز الاتجاه: ＋ سلوك إيجابي، − فرصة تطوير، ٠ محايد. القوة: ١ مباشرة، ٠٫٥ جزئية. المرجع: رقم السلوك أو بند «ما لا تعنيه» من الملف.</p>
+      ${matrix}
+      <div class="actions"><button class="btn ghost" data-act="exit-designer">العودة للعبة</button></div>
+    </section>`;
+  }
+
+  /* ---------- الرسم والأحداث ---------- */
+  function render() {
+    const day = S.screen === 'report' || S.screen === 'designer';
+    document.body.classList.toggle('day', day);
+    const ci = (S.screen === 'chapter' || S.screen === 'scenario' || S.screen === 'outcome') ? chOf(scOf(S.idx).ch) : (S.screen === 'loading' ? chOf(8) : chOf(1));
+    document.body.style.setProperty('--glow', ci.glow);
+    document.body.classList.toggle('late', ci.n >= 7);
+    const m = { start: startScreen, how: howScreen, name: nameScreen, chapter: chapterScreen, scenario: sceneScreen, outcome: outcomeScreen, loading: loadingScreen, report: reportScreen, designer: designerScreen };
+    $app.innerHTML = m[S.screen]();
+  }
+  function burst(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const s = document.createElement('span'); s.className = 'spark';
+      const a = (i / 12) * Math.PI * 2, d = 40 + Math.random() * 40;
+      s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d + 'px');
+      document.body.appendChild(s); setTimeout(() => s.remove(), 950);
+    }
+  }
+  function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+
+  $app.addEventListener('click', e => {
+    const t = e.target.closest('[data-act]'); if (!t || t.disabled) return;
+    const act = t.dataset.act, sc = scOf(S.idx);
+    if (act === 'how') go('how');
+    else if (act === 'name') go('name');
+    else if (act === 'begin') { const inp = document.getElementById('nm'); S.name = t.dataset.skip ? '' : (inp ? inp.value.trim().slice(0, 30) : ''); S.idx = 0; go('chapter'); }
+    else if (act === 'next') go('scenario');
+    else if (act === 'opt') {
+      const id = t.dataset.id;
+      if (sc.type === 'rank') { const k = S.rank.indexOf(id); if (k >= 0) S.rank.splice(k, 1); else if (S.rank.length < 3) S.rank.push(id); }
+      else S.pick = id;
+      const r = t.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2);
+      render();
+    }
+    else if (act === 'confirm') {
+      S.answers[sc.id] = sc.type === 'rank' ? { rank: S.rank.slice() } : { pick: S.pick };
+      const chosen = sc.options.find(o => o.id === (sc.type === 'rank' ? S.rank[0] : S.pick)); if (chosen && chosen.set) S.flags[chosen.set] = 1;
+      S.pick = null; S.rank = []; go('outcome');
+    }
+    else if (act === 'cont') {
+      if (S.idx === G.scenarios.length - 1) {
+        go('loading');
+        setTimeout(() => { S.result = E.analyze(G, S.answers); S.report = buildReport(S.result, S.name); go('report'); }, 1800);
+      } else { S.idx++; go(scOf(S.idx).ch !== scOf(S.idx - 1).ch ? 'chapter' : 'scenario'); }
+    }
+    else if (act === 'restart') { fresh(S.name); go('start'); }
+    else if (act === 'copy') {
+      const txt = reportText(S.report), box = document.getElementById('copybox');
+      const fallback = () => { box.innerHTML = '<div class="read"><h3>انسخي النص من هنا</h3><textarea id="ct" readonly rows="10" style="width:100%;font:inherit;padding:10px;border-radius:10px;border:2px solid var(--line)"></textarea></div>'; const ta = document.getElementById('ct'); ta.value = txt; ta.focus(); ta.select(); };
+      try { navigator.clipboard.writeText(txt).then(() => toast('تم نسخ التقرير'), fallback); } catch (err) { fallback(); }
+    }
+    else if (act === 'sim') { S.sim = simAll(3000); render(); }
+    else if (act === 'exit-designer') { location.hash = ''; }
+  });
+
+  function route() {
+    if (location.hash === '#designer') { S.prev = S.screen === 'designer' ? S.prev : S.screen; go('designer'); }
+    else if (S.screen === 'designer') go(S.prev && S.prev !== 'loading' ? S.prev : 'start');
+  }
+  window.addEventListener('hashchange', route);
+
+  /* خلفية المدينة: توهّج يتغير مع ساعات اليوم */
+  const sky = document.createElement('div'); sky.className = 'sky'; sky.setAttribute('aria-hidden', 'true');
+  let st = ''; for (let i = 0; i < 30; i++) st += `<i class="star" style="left:${(i * 53 % 100)}%;top:${(i * 29 % 50)}%;animation-delay:${(i % 7) * .6}s"></i>`;
+  let bl = '', x = 0; const hs = [58, 84, 46, 96, 70, 52, 88, 64, 78, 50];
+  hs.forEach((h, k) => { const w = 34 + (k * 7 % 20); bl += `<rect x="${x}" y="${120 - h}" width="${w}" height="${h}" fill="#1A0A09"/>`; for (let r = 0; r < 4; r++) if ((k + r) % 2 === 0) bl += `<rect x="${x + 7}" y="${120 - h + 8 + r * 14}" width="5" height="6" fill="#FFC72C" opacity=".55"/>`; x += w + 2; });
+  sky.innerHTML = '<div class="glow"></div>' + st + `<svg class="city" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice">${bl}</svg>`;
+  document.body.prepend(sky);
+
+  window.__GAME_STATE = () => S; /* للاختبار الآلي فقط */
+  render(); route();
+})();
+
+</script>
